@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login SlowNews</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../../../resources/css/login.css" th:href="@{/resources/css/login.css}" />
+</head>
+<body>
+
+<div th:if="${error} != null">
+    <h3><p>The Error is: <span th:text="${error}">...no have mind))</span></p></h3>
+</div>
+
+<form action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="name">Login:</label></div>
+        <div><input type="text" th:field="*{name}" class="input"/></div>
+    </div>
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="password">Password:</label></div>
+        <div><input type="password" th:field="*{password}" class="input"/></div>
+    </div>
+
+    <div>
+        <input type="submit" value="Login" class="button17"/>
+    </div>
+
+    <div>
+        <a class="button17" href="/news">Read unregister</a>
+    </div>
+
+</form>
+
+
+</body>
+</html>
+

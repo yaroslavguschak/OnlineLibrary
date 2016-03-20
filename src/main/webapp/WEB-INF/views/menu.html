@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<nav th:fragment="header">
+
+    <form action="news" method="post" class="headerMain">
+        <input type="submit" value="News"/>
+    </form>
+    <form action="archive" method="get" class="headerMain">
+        <input type="submit" value="Archive"/>
+    </form>
+
+    <div th:if="${showuser} != null">
+        <form action="logout" method="get" class="headerMain">
+            <input type="submit" value="Logout"/>
+        </form>
+    </div>
+
+    <div th:if="${showuser} == null">
+        <form action="login" method="get" class="headerMain">
+            <input type="submit" value="Login"/>
+        </form>
+    </div>
+
+</nav>
+</body>
+</html>

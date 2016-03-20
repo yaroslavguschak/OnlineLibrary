@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SlowNews - latest news</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../../../resources/css/index.css" th:href="@{/resources/css/index.css}" />
+
+
+</head>
+<body>
+
+<div th:if="${showuser} != null">
+        <p style="font-family: monospace; margin-right: 20pt; color: darksalmon; text-align: right; font-size: 15pt"> <span th:text="${showuser.nickname}"/></p>
+</div>
+
+<div style="display: flex" th:include="menu :: header">Menu</div>
+
+
+<div th:if="${showuser} == null">
+        <p style="font-family: monospace; margin-left: 10pt; color: darksalmon">Please,  <a style="color: lightgoldenrodyellow" href="/login">login</a> and use personal archive!</p>
+</div>
+
+
+<form action="#" th:action="@{/archiveaction}"  method="post" style="margin-right:20px">
+    <div th:each="article, iterationStatus : ${articleList}">
+        <div class="itemContainer">
+            <div style="display: flex">
+                <div th:if="${showuser} != null">
+                    <div th:if="${isSaved[iterationStatus.count-1]}==100">
+                        <img  th:attr="src=@{/resources/images/floppy.png}" height="20" width="20" />
+                    </div>
+                    <div th:if="${isSaved[iterationStatus.count-1]}!=100">
+                        <!--<span th:text="${iterationStatus.count}"/>-->
+                        <input type="checkbox" th:name="${iterationStatus.count} - 1" value="save"/>
+                    </div>
+                </div>
+                <h2 style="margin:1px; font-size:13pt; color: lightgrey;font-family: sans-serif "><span th:text="${article.title}"/></h2>
+            </div>
+
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
+                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${article.description}"/></p>
+            </div>
+
+            <div>
+                <details style="color: black; font-size: 10pt">
+                    <summary>More...</summary>
+                    <div style="margin-left: 25pt; margin-top: 2pt; background-color: #687983; border-radius: 0 10px 10px 10px; padding: 5px">
+                        <p><span th:utext="${article.fulltext}"/></p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+    <div th:if="${showuser} != null">
+        <input type="hidden" name="action" value="SAVE"/>
+        <input type="submit" value="Save"/>
+    </div>
+
+
+</form>
+
+
+
+
+
+
+
+
+</body>
+</html>

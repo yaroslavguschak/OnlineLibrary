@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register online Lib</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../../../resources/css/login.css" th:href="@{/resources/css/login.css}" />
+</head>
+<body>
+
+
+
+<form action="#" th:action="@{/doregister}"  th:object="${registerRequest}" method="post">
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="nickname">Your nick:</label>
+        <input type="text" th:field="*{nickname}"  class="input" /></div>
+    </div>
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="firstName">Fist Name:</label>
+            <input type="text" th:field="*{firstName}" class="input"/></div>
+    </div>
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="lastName">Last Name</label>
+            <input type="text" th:field="*{lastName}" class="input"/></div>
+    </div>
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="email">E-mail:</label>
+            <input type="text" th:field="*{email}" class="input"/></div>
+    </div>
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="permission">Role:</label>
+            <input type="text" th:field="*{permission}" class="input"/></div>
+    </div>
+
+
+    <div  style="display:block; margin-bottom: 10px">
+        <div><label class="little" for="password">Password:</label>
+        <input type="password" th:field="*{password}" class="input"/></div>
+    </div>
+
+    <div>
+        <input type="submit" value="Login" class="button17"/>
+    </div>
+
+    <div>
+        <a class="button17" href="/news">Read unregister</a>
+    </div>
+
+</form>
+
+
+</body>
+</html>
+
