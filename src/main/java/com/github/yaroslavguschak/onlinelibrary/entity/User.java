@@ -27,7 +27,7 @@ public class User {
     @Column(name = "permission")
     private Permission permission;
 
-    /// need add Class Shelf )))haha) HA)
+    /// need add Class Shelf )))haha) HA) - and next commit! / 
 
 
 
