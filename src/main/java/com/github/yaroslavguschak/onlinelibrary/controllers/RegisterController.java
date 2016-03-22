@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @Controller
 public class RegisterController {
@@ -27,11 +28,11 @@ public class RegisterController {
     @RequestMapping(value = "/doregister", method= RequestMethod.POST)
     @ResponseBody
     public void doRegister(@ModelAttribute("registerRequest") RegisterRequest regReq, HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+            throws ServletException, IOException, GeneralSecurityException {
 
             HttpSession httpSession = req.getSession(true);
 
-            User user = new User(regReq.getNickname(),regReq.getFirstName(), regReq.getLastName(), regReq.getEmail(), regReq.getPermission());
+            User user = new User(regReq.getNickname(),regReq.getFirstName(), regReq.getLastName(), regReq.getEmail(), regReq.getPermission(), regReq.getPassword());
             System.out.println("User REGISTER successful: " + user + " in time" + httpSession.getCreationTime());
             dao.saveNewUser(user);
             httpSession.setAttribute("user", user);
