@@ -10,12 +10,11 @@ import java.security.GeneralSecurityException;
 public class User {
 
     @Id
-    @GeneratedValue(generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "SC_SEQ", allocationSize = 1)
-    private Integer Id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Column(name = "nickname", length = 30)
-    private String nickname;
+    @Column(name = "login", length = 30)
+    private String login;
 
     @Column(name = "firstName", length = 100)
     private String firstName;
@@ -33,37 +32,50 @@ public class User {
     @Column(name = "permission")
     private Permission permission;
 
-    /// need add Class Shelf
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    Shelf shelf;
 
 
 
 
     public User() {
-        this.nickname  = "0nickname";
+        this.login = "0nickname";
         this.firstName = "0first name";
         this.lastName  = "0last name";
         this.email     = "0email";
         this.passwordhash = "notgen";
         this.permission = Permission.GUEST;
+        this.shelf = new Shelf();
     }
 
     public User(String nickname, String firstName, String lastName, String email, Permission permission, String password) throws GeneralSecurityException {
-        this.nickname = nickname;
+        this.login = nickname;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.passwordhash = CSHA1Util.getSHA1String(password);
         this.permission = permission;
+        this.shelf = new Shelf();
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 
-    public String getNickname() {
-        return nickname;
+
+
+    public String getLogin() {
+        return login;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getFirstName() {
@@ -90,6 +102,15 @@ public class User {
         this.email = email;
     }
 
+    public String getPasswordhash() {
+        return passwordhash;
+    }
+
+    public void setPasswordhash(String passwordhash) {
+        this.passwordhash = passwordhash;
+    }
+
+
     public Permission getPermission() {
         return permission;
     }
@@ -98,11 +119,21 @@ public class User {
         this.permission = permission;
     }
 
+    public Shelf getShelf() {
+        return shelf;
+    }
+
+    public void setShelf(Shelf shelf) {
+        this.shelf = shelf;
+    }
+
+
+
 
     @Override
     public String toString() {
         return "User{" +
-                "nickname='" + nickname + '\'' +
+                "nickname='" + login + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

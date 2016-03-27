@@ -7,6 +7,9 @@ import javax.persistence.*;
 public class Book {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @Column(name = "isbn", length = 30)
     private String isbn;
 

@@ -1,12 +1,30 @@
 package com.github.yaroslavguschak.onlinelibrary.entity;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "shelf")
 public class Shelf {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List <Book> bookList = new ArrayList<>();
 
+
     public Shelf() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Shelf(List<Book> bookList) {
@@ -64,10 +82,6 @@ public class Shelf {
     public void delById(int bookId){
         this.bookList.remove(bookId);
     }
-
-
-
-
 
 
 

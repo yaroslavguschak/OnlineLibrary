@@ -8,7 +8,7 @@
 <body>
 
     <div th:if="${showuser} != null">
-        <p style="font-family: monospace; margin-right: 20pt; color: darksalmon; text-align: right; font-size: 15pt"> <span th:text="${showuser.nickname}"/></p>
+        <p style="font-family: monospace; margin-right: 20pt; color: darksalmon; text-align: right; font-size: 15pt"> <span th:text="${showuser.login}"/></p>
     </div>
 
     <div style="display: flex" th:include="menu :: header">Menu</div>

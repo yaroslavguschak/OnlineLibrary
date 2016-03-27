@@ -1,5 +1,6 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
+import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.DAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.RegisterRequest;
@@ -32,8 +33,13 @@ public class RegisterController {
 
             HttpSession httpSession = req.getSession(true);
 
-            User user = new User(regReq.getNickname(),regReq.getFirstName(), regReq.getLastName(), regReq.getEmail(), regReq.getPermission(), regReq.getPassword());
+            User user = new User(regReq.getLogin(),regReq.getFirstName(), regReq.getLastName(),
+                                 regReq.getEmail(), regReq.getPermission(), regReq.getPassword());
             System.out.println("User REGISTER successful: " + user + " in time" + httpSession.getCreationTime());
+            ///test code
+            user.getShelf().addBook(new Book());
+            ///end test
+
             dao.saveNewUser(user);
             httpSession.setAttribute("user", user);
             RequestDispatcher requestDispatcher;

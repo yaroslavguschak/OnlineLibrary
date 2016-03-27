@@ -4,7 +4,7 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 
 public class RegisterRequest {
 
-    private String nickname       = "";
+    private String login = "";
     private String firstName      = "";
     private String lastName       = "";
     private String email          = "";
@@ -22,12 +22,12 @@ public class RegisterRequest {
         this.permission = permission;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getLogin() {
+        return login;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getFirstName() {

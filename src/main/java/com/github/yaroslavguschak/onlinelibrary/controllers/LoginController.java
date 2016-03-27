@@ -31,7 +31,7 @@ public class LoginController {
         if (loginRequest.getName().equals(name)&&loginRequest.getPassword().equals(password)){
             HttpSession httpSession = req.getSession(true);
             System.out.println("User logged successful: " + name + " in time" + httpSession.getCreationTime());
-            User user = new User(loginRequest.getName(),"MaklZZZZZ", "Guschak","yar.guschak@google.comMMM", Permission.GUEST);
+            User user = new User();
             httpSession.setAttribute("user", user);
             RequestDispatcher requestDispatcher;
             requestDispatcher = req.getRequestDispatcher("/news");
