@@ -10,57 +10,75 @@
 
 
 <form action="#" th:action="@{/doaddbook}"  th:object="${bookRequest}" method="post">
+    <div class="main">
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="isbn">isbn:</label>
+                <input type="text" th:field="*{isbn}"  class="input" />
+            </div>
+        </div>
 
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="isbn">isbn:</label>
-        <input type="text" th:field="*{isbn}"  class="input" /></div>
+
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="author">author:</label>
+                <input type="text" th:field="*{author}"  class="input" />
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="title">title:</label>
+                <input type="text" th:field="*{title}"  class="input" />
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="genre">genre:</label>
+                <select class="input">
+                    <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}" th:value="${state}" th:text="${state}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="year">year:</label>
+                <input type="text" th:field="*{year}"  class="input" />
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="city">city:</label>
+                <input type="text" th:field="*{city}"  class="input" />
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="pages">pages:</label>
+                <input type="text" th:field="*{pages}"  class="input" />
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="booktext">booktext:</label>
+                <input type="text" th:field="*{booktext}"  class="input" />
+            </div>
+        </div>
+
+
+
+
+
+        <div>
+            <input type="submit" value="Add Book" class="button17"/>
+        </div>
     </div>
-
-
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="author">author:</label>
-            <input type="text" th:field="*{author}"  class="input" /></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="title">title:</label>
-            <input type="text" th:field="*{title}"  class="input" /></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="genre">genre:</label>
-            <input type="text" th:field="*{genre}"  class="input" /></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="year">year:</label>
-            <input type="text" th:field="*{year}"  class="input" /></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="city">city:</label>
-            <input type="text" th:field="*{city}"  class="input" /></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="pages">pages:</label>
-            <input type="text" th:field="*{pages}"  class="input" /></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="booktext">booktext:</label>
-            <input type="text" th:field="*{booktext}"  class="input" /></div>
-    </div>
-
-
-
-
-
-    <div>
-        <input type="submit" value="Add Book" class="button17"/>
-    </div>
-
 
 
 </form>
