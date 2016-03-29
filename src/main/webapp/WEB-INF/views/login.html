@@ -8,14 +8,14 @@
 <body>
 
 <div th:if="${error} != null">
-    <h3><p>The Error is: <span th:text="${error}">...no have mind))</span></p></h3>
+    <h3><p>The Error is: <span th:text="${error}">Login or Password are wrong! Try again.))</span></p></h3>
 </div>
 
 <form action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
 
     <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="name">Login:</label></div>
-        <div><input type="text" th:field="*{name}" class="input"/></div>
+        <div><label class="little" for="login">Login:</label></div>
+        <div><input type="text" th:field="*{login}" class="input"/></div>
     </div>
 
     <div  style="display:block; margin-bottom: 10px">

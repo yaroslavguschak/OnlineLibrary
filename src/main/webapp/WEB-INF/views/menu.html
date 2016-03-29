@@ -5,11 +5,11 @@
 <body>
 <nav th:fragment="header">
 
-    <form action="news" method="post" class="headerMain">
-        <input type="submit" value="News"/>
+    <form action="shelf" method="post" class="headerMain">
+        <input type="submit" value="Shelf"/>
     </form>
-    <form action="archive" method="get" class="headerMain">
-        <input type="submit" value="Archive"/>
+    <form action="library" method="get" class="headerMain">
+        <input type="submit" value="Library"/>
     </form>
 
     <div th:if="${showuser} != null">

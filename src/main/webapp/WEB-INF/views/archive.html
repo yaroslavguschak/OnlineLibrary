@@ -25,7 +25,7 @@
                 <div class="itemContainer">
                     <div style="display: flex">
                         <div th:if="${showuser} != null">
-                            <input type="checkbox" name="${iterationStatus.count}" value="save"/>
+                            <input type="checkbox" login="${iterationStatus.count}" value="save"/>
                         </div>
                         <h2 style="margin:1px; font-size:13pt; color: lightgrey;font-family: sans-serif "><span th:text="${article.title}"/></h2>
                     </div>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div th:if="${showuser} != null">
-                <input type="hidden" name="action" value="DELETE"/>
+                <input type="hidden" login="action" value="DELETE"/>
                 <input type="submit" value="Delete"/>
             </div>
 

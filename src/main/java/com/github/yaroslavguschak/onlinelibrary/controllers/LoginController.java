@@ -1,6 +1,5 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
-import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
 import org.springframework.stereotype.Controller;
@@ -28,7 +27,7 @@ public class LoginController {
         String name = "Yar";
         String password = "111";
 
-        if (loginRequest.getName().equals(name)&&loginRequest.getPassword().equals(password)){
+        if (loginRequest.getLogin().equals(name)&&loginRequest.getPassword().equals(password)){
             HttpSession httpSession = req.getSession(true);
             System.out.println("User logged successful: " + name + " in time" + httpSession.getCreationTime());
             User user = new User();

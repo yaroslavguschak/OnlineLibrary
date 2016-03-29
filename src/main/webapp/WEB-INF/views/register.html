@@ -10,46 +10,61 @@
 
 
 <form action="#" th:action="@{/doregister}"  th:object="${registerRequest}" method="post">
+    <div class="main">
+        <div  style="display:block; margin-bottom: 5px">
+            <div class="field">
+                <label class="little" for="login">Your login:</label>
+                <input type="text" th:field="*{login}" class="input" />
+            </div>
+        </div>
 
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="login">Your nick:</label>
-        <input type="text" th:field="*{login}" class="input" /></div>
+        <div  style="display:block; margin-bottom: 5px">
+            <div class="field">
+                <label class="little" for="firstName">Fist Name:</label>
+                <input type="text" th:field="*{firstName}" class="input"/>
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 5px">
+            <div class="field">
+                <label class="little" for="lastName">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="input"/>
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="email">E-mail:</label>
+                <input type="text" th:field="*{email}" class="input"/>
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="permission">Role:</label>
+                <select class="input">
+                    <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).values()}" th:value="${state}" th:text="${state}"></option>
+                </select>
+            </div>
+        </div>
+
+
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="password">Password:</label>
+                <input type="password" th:field="*{password}" class="input"/>
+            </div>
+        </div>
+
+        <div>
+            <input type="submit" value="Register" class="button17"/>
+        </div>
+
+        <div>
+            <a class="button17" href="/news">See books</a>
+        </div>
     </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="firstName">Fist Name:</label>
-            <input type="text" th:field="*{firstName}" class="input"/></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="lastName">Last Name</label>
-            <input type="text" th:field="*{lastName}" class="input"/></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="email">E-mail:</label>
-            <input type="text" th:field="*{email}" class="input"/></div>
-    </div>
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="permission">Role:</label>
-            <input type="text" th:field="*{permission}" class="input"/></div>
-    </div>
-
-
-    <div  style="display:block; margin-bottom: 10px">
-        <div><label class="little" for="password">Password:</label>
-        <input type="password" th:field="*{password}" class="input"/></div>
-    </div>
-
-    <div>
-        <input type="submit" value="Login" class="button17"/>
-    </div>
-
-    <div>
-        <a class="button17" href="/news">Read unregister</a>
-    </div>
-
 </form>
 
 
