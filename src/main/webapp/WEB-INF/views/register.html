@@ -4,45 +4,46 @@
     <title>Register online Lib</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="../../../resources/css/login.css" th:href="@{/resources/css/login.css}" />
+    <link rel="stylesheet" href="../../../resources/css/index.css" th:href="@{/resources/css/index.css}" />
 </head>
 <body>
 
-
+<div style="display: flex" th:include="menu :: header">Menu</div>
 
 <form action="#" th:action="@{/doregister}"  th:object="${registerRequest}" method="post">
     <div class="main">
         <div  style="display:block; margin-bottom: 5px">
             <div class="field">
-                <label class="little" for="login">Your login:</label>
+                <label class="little" for="login">login:</label>
                 <input type="text" th:field="*{login}" class="input" />
             </div>
         </div>
 
         <div  style="display:block; margin-bottom: 5px">
             <div class="field">
-                <label class="little" for="firstName">Fist Name:</label>
+                <label class="little" for="firstName">fist name:</label>
                 <input type="text" th:field="*{firstName}" class="input"/>
             </div>
         </div>
 
         <div  style="display:block; margin-bottom: 5px">
             <div class="field">
-                <label class="little" for="lastName">Last Name</label>
+                <label class="little" for="lastName">last name:</label>
                 <input type="text" th:field="*{lastName}" class="input"/>
             </div>
         </div>
 
         <div  style="display:block; margin-bottom: 10px">
             <div class="field">
-                <label class="little" for="email">E-mail:</label>
+                <label class="little" for="email">email:</label>
                 <input type="text" th:field="*{email}" class="input"/>
             </div>
         </div>
 
         <div  style="display:block; margin-bottom: 10px">
             <div class="field">
-                <label class="little" for="permission">Role:</label>
-                <select class="input">
+                <label class="little" for="permission">role:</label>
+                <select class="input" th:field="*{permission}">
                     <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).values()}" th:value="${state}" th:text="${state}"></option>
                 </select>
             </div>
@@ -52,7 +53,7 @@
 
         <div  style="display:block; margin-bottom: 10px">
             <div class="field">
-                <label class="little" for="password">Password:</label>
+                <label class="little" for="password">pass:</label>
                 <input type="password" th:field="*{password}" class="input"/>
             </div>
         </div>
@@ -61,9 +62,7 @@
             <input type="submit" value="Register" class="button17"/>
         </div>
 
-        <div>
-            <a class="button17" href="/news">See available books</a>
-        </div>
+
     </div>
 </form>
 

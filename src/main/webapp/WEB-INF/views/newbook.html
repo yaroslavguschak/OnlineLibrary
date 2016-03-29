@@ -4,10 +4,11 @@
     <title>Add new book</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="../../../resources/css/login.css" th:href="@{/resources/css/login.css}" />
+    <link rel="stylesheet" href="../../../resources/css/index.css" th:href="@{/resources/css/index.css}" />
 </head>
 <body>
 
-
+<div style="display: flex" th:include="menu :: header">Menu</div>
 
 <form action="#" th:action="@{/doaddbook}"  th:object="${bookRequest}" method="post">
     <div class="main">
@@ -37,7 +38,8 @@
         <div  style="display:block; margin-bottom: 10px">
             <div class="field">
                 <label class="little" for="genre">genre:</label>
-                <select class="input">
+                <!--<input type="text" th:field="*{genre}"  class="input" />-->
+                <select class="input" th:field="*{genre}">
                     <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}" th:value="${state}" th:text="${state}"></option>
                 </select>
             </div>
