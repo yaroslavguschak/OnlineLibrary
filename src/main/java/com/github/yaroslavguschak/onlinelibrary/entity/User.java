@@ -7,13 +7,15 @@ import java.security.GeneralSecurityException;
 
 @Entity
 @Table(name = "libuser")
+@NamedQueries({ @NamedQuery(name = "User.getUserByLogin", query = "SELECT u FROM User u where u.login = :userl")})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "login", length = 30)
+
+    @Column(name = "login", unique = true, length = 30)
     private String login;
 
     @Column(name = "firstName", length = 100)
@@ -49,8 +51,8 @@ public class User {
         this.shelf = new Shelf();
     }
 
-    public User(String nickname, String firstName, String lastName, String email, Permission permission, String password) throws GeneralSecurityException {
-        this.login = nickname;
+    public User(String login, String firstName, String lastName, String email, Permission permission, String password) throws GeneralSecurityException {
+        this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

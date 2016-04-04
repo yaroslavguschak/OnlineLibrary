@@ -1,7 +1,7 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
+import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
-import com.github.yaroslavguschak.onlinelibrary.entity.DAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.security.GeneralSecurityException;
 @Controller
 public class RegisterController {
     @Autowired
-    DAO dao;
+    UserDAO dao;
 
 
     @RequestMapping(value = "/doregister", method= RequestMethod.POST)

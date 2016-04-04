@@ -1,7 +1,8 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
+import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
-import com.github.yaroslavguschak.onlinelibrary.entity.DAO;
+import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,19 +23,19 @@ import java.util.List;
 public class ShelfController {
 
     @Autowired
-    DAO dao;
+    BookDAO dao;
+    UserDAO userDAO;
 
 
     @RequestMapping(value = "/shelf")
     public ModelAndView showShelf(HttpServletRequest req, HttpServletResponse resp) {
-        User user;
         HttpSession httpSession = req.getSession(true);
-        user = (User)httpSession.getAttribute("user");
+        User user = (User)httpSession.getAttribute("user");
         final ModelAndView mav = new ModelAndView("/shelf");
 
         if (user != null){
             mav.addObject("showuser",user);
-            ArrayList<Book> articleList = (ArrayList<Book>) dao.getUserShelf();
+            ArrayList<Book> articleList = (ArrayList<Book>) dao.getAllUser();
             httpSession.setAttribute("articleList", articleList);
             mav.addObject("articleList",articleList);
             return mav;
@@ -58,7 +59,7 @@ public class ShelfController {
                     bookListTEMP.add(bookList.get(i));
                 }
             }
-            dao.addToUserShelf(bookListTEMP);
+            dao.addBooksToLibrary(bookListTEMP);
             System.out.println(" DONE!");
             RequestDispatcher requestDispatcher;
             requestDispatcher = req.getRequestDispatcher("/news");
@@ -67,7 +68,7 @@ public class ShelfController {
 
         if (req.getParameter("action").equals("DELETE")){
             System.out.println("LOG: " + "deleting items... DONE!");
-            dao.saveDefoltUser();
+//            userDAO.saveDefoltUser();
             RequestDispatcher requestDispatcher;
             requestDispatcher = req.getRequestDispatcher("/archive");
             requestDispatcher.forward(req, resp);

@@ -38,7 +38,6 @@
         <div  style="display:block; margin-bottom: 10px">
             <div class="field">
                 <label class="little" for="genre">genre:</label>
-                <!--<input type="text" th:field="*{genre}"  class="input" />-->
                 <select class="input" th:field="*{genre}">
                     <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}" th:value="${state}" th:text="${state}"></option>
                 </select>

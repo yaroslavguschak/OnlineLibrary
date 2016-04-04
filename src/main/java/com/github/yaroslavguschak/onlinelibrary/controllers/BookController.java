@@ -1,7 +1,8 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
-import com.github.yaroslavguschak.onlinelibrary.entity.DAO;
+import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
+import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ import java.io.IOException;
 @Controller
 public class BookController {
     @Autowired
-    DAO dao;
+    BookDAO dao;
 
 
     @RequestMapping(value = "/doaddbook", method = RequestMethod.POST)
@@ -41,6 +42,10 @@ public class BookController {
 
             System.out.println("User CREATED successful: " + book + " in time" + httpSession.getCreationTime());
             dao.saveNewBook(book);
+        ////
+        Book book2 = new Book("Charles Dickens", "Great Expectations", Genre.DRAMA, 1861, "London", "256-369-456-584", 256, "Story about Great Expectations");
+        dao.saveNewBook(book2);
+        /////
             httpSession.setAttribute("book", book); // це тут потрібно?????
             RequestDispatcher requestDispatcher;
             requestDispatcher = req.getRequestDispatcher("/newbook");

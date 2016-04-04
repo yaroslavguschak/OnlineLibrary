@@ -1,6 +1,6 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
-import com.github.yaroslavguschak.onlinelibrary.entity.DAO;
+import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,8 @@ import javax.servlet.http.HttpSession;
 public class LibraryController {
 
     @Autowired
-    DAO dao;
+    BookDAO bookDAO;
+
 
 
     @RequestMapping(value = "/books")
@@ -23,16 +24,16 @@ public class LibraryController {
 
 
 //        user = (User)httpSession.getAttribute("user");
-//        List<Book> bookList = dao.getUserShelf();
+//        List<Book> bookList = bookDAO.getAllUser();
 //        List<Integer> isSaved = new ArrayList<>(bookList.size());//????????
         final ModelAndView mav = new ModelAndView("/news");
 
         //================
-        dao.saveDefoltUser(); ////заглушка
+//        bookDAO.saveDefoltUser(); ////заглушка
         ////========
 
 //        if (user != null){
-//            ArrayList<Book> booksSavedOnShelf = (ArrayList<Book>) dao.getUserShelf();
+//            ArrayList<Book> booksSavedOnShelf = (ArrayList<Book>) bookDAO.getAllUser();
 //
 //            for (int i = 0; i < bookList.size(); ++i) {
 //                isSaved.add(i,-100);

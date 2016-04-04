@@ -1,21 +1,21 @@
-package com.github.yaroslavguschak.onlinelibrary.entity;
+package com.github.yaroslavguschak.onlinelibrary.dao;
 
+import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.ws.rs.client.WebTarget;
 import java.util.List;
 
 @Component
-public class DAO {
+public class BookDAO {
 
 
     @Autowired
     public EntityManagerFactory entityManagerFactory;
 
-    public void addToUserShelf(List<Book> bookList){
+    public void addBooksToLibrary(List<Book> bookList){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
 
@@ -27,31 +27,13 @@ public class DAO {
         entityManager.close();
     }
 
-    public void saveDefoltUser(){
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        User user = new User();
-        System.out.println("==================");
-        System.out.println("LOG / new User created" + user.toString());
-        System.out.println("==================");
-        entityManager.persist(user);
 
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }
+
 
 
 
    /////// OK
-    public void saveNewUser (User user){
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.persist(user);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        System.out.println("LOG / new User add to DB" + user.toString());
 
-    }
 
 
     /////// OK
@@ -71,7 +53,9 @@ public class DAO {
 
 
 
-    public List <Book> getUserShelf(){
+
+
+    public List <Book> getAllUser(){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
 
