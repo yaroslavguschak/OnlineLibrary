@@ -12,7 +12,7 @@ public class Shelf {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List <Book> bookList = new ArrayList<>();
 
 

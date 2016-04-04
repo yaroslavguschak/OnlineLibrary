@@ -1,6 +1,7 @@
 package com.github.yaroslavguschak.onlinelibrary.dao;
 
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
+import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,13 @@ public class BookDAO {
     }
 
 
+    public List <Book> getAllBooks(){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
+        List <Book> bookList = (List <Book>) entityManager.createQuery("select e from Book e").getResultList();
+        entityManager.close();
+        return bookList;
+    }
 
 
 

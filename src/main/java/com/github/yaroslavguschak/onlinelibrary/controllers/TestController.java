@@ -1,7 +1,6 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
-import com.github.yaroslavguschak.onlinelibrary.dao.Stock;
 import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
@@ -45,8 +44,8 @@ public class TestController {
         bookDAO.saveNewBook(book);
         book = new Book("Jack London", "White Fang", Genre.REALISTIC_FICTION, 1906, "New York", "978-185-813-634", 298, "Story about White Fang");
         bookDAO.saveNewBook(book);
-        book = new Book("Панас Мирний", "Хіба ревуть воли, як ясла повні", Genre.TRAGEDY, 1865, "Київ", "464-155-813-634", 298, "Історія про волів і не тільки");
-        bookDAO.saveNewBook(book);
+        Book book1 = new Book("Панас Мирний", "Хіба ревуть воли, як ясла повні", Genre.TRAGEDY, 1865, "Київ", "464-155-813-634", 298, "Історія про волів і не тільки");
+        bookDAO.saveNewBook(book1);
 
         List<Book> bookList = bookDAO.getAllUser();
 
@@ -59,6 +58,8 @@ public class TestController {
 
         //String nickname, String firstName, String lastName, String email, Permission permission, String password
         User user = new User("makl", "Yaroslav", "Guschak", "yar.guschak@gmail.com", Permission.ADMIN, "1111");
+        user.getShelf().addBook(book);
+        user.getShelf().addBook(book1);
 
         userDAO.saveNewUser(user);
         user = new User("snake", "Vasyl", "Golodnyak", "snake@gmail.com", Permission.SUBSCRIBER, "2222");

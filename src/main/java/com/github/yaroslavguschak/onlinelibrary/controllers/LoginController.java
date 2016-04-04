@@ -31,6 +31,24 @@ public class LoginController {
     @Autowired
     UserDAO userDAO;
 
+    @RequestMapping(value = "/login", method= RequestMethod.GET)
+    public ModelAndView loginGet() {
+        final ModelAndView mav = new ModelAndView("/login");
+        LoginRequest loginRequest = new LoginRequest();
+        mav.addObject("loginRequest",loginRequest);
+        return mav;
+    }
+
+    @RequestMapping(value = "/logout", method= RequestMethod.GET)
+    public ModelAndView logOut(HttpServletRequest req, HttpServletResponse resp) {
+        final ModelAndView mav = new ModelAndView("/login");
+        HttpSession httpSession = req.getSession(true);
+        httpSession.invalidate();
+        LoginRequest loginRequest = new LoginRequest();
+        mav.addObject("loginRequest",loginRequest);
+        return mav;
+    }
+
 
     @RequestMapping(value = "/loginchek", method= RequestMethod.POST)
     @ResponseBody
@@ -57,14 +75,9 @@ public class LoginController {
 
     }
 
-    @RequestMapping(value = "/login", method= RequestMethod.GET)
-    public ModelAndView loginGet() {
-        final ModelAndView mav = new ModelAndView("/login");
-        LoginRequest loginRequest = new LoginRequest();
-        mav.addObject("loginRequest",loginRequest);
-        return mav;
-    }
 
+
+    ////////////////////DELETE//////////////////////////////
     @RequestMapping(value = "/user")
     public ModelAndView aboutUser(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession httpSession = req.getSession(true);
