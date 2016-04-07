@@ -79,10 +79,25 @@ public class Shelf {
         this.bookList.add(book);
     }
 
-    public void delById(int bookId){
-        this.bookList.remove(bookId);
+    public void delById(Long bookId){
+        int i = 0;
+        boolean notFind = true;
+        while (notFind && i < this.getBookList().size()) {
+            if (this.getBookList().get(i).getId().equals(bookId)){
+                this.getBookList().remove(i);
+                notFind = false;
+            } else {
+                ++i;
+            }
+        };
+
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Shelf{" +
+                "id=" + id +
+                ", bookList=" + bookList +
+                '}';
+    }
 }

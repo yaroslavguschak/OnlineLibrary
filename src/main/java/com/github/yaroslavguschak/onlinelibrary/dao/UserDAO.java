@@ -44,6 +44,17 @@ public class UserDAO {
         }
     }
 
+    public void updateUser (User user){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(user);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        System.out.println("LOG / User updated in  DB" + user.toString());
+
+    }
+
+
     public List <User> getAllUser(){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 //        entityManager.getTransaction().begin();

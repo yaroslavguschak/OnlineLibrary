@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,29 +26,29 @@ public class LibraryController {
     public ModelAndView showNews(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession httpSession = req.getSession(true);
         final ModelAndView mav = new ModelAndView("/library");
-        List<Book> bookList = bookDAO.getAllBooks();
+        List<Book> allBooksInLibrary = bookDAO.getAllBooks();
         User user = (User)httpSession.getAttribute("user");
 
-//        List<Integer> isSaved = new ArrayList<>(bookList.size());//????????
+        List<Integer> isSaved = new ArrayList<>(allBooksInLibrary.size());
 
         if (user != null){
-//            ArrayList<Book> booksSavedOnShelf = (ArrayList<Book>) bookDAO.getAllUser();
-//
-//            for (int i = 0; i < bookList.size(); ++i) {
-//                isSaved.add(i,-100);
-//                for (Book articleSaved:booksSavedOnShelf) {
-//                    if (bookList.get(i).getTitle().equals(articleSaved.getTitle())){
-//                        isSaved.add(i,100);
-//                    }
-//                }
-//            }
+            List<Book> booksSavedOnShelf = user.getShelf().getBookList();
+
+            for (int i = 0; i < allBooksInLibrary.size(); ++i) {
+                isSaved.add(i,-100);
+                for (Book bookSaved:booksSavedOnShelf) {
+                    if (allBooksInLibrary.get(i).getId().equals(bookSaved.getId())){
+                        isSaved.add(i,100);
+                    }
+                }
+            }
             mav.addObject("showuser", user);
-//            httpSession.setAttribute("bookList", bookList);
-            mav.addObject("bookList", bookList);
-//            mav.addObject("isSaved", isSaved);
+            httpSession.setAttribute("bookList", allBooksInLibrary);
+            mav.addObject("bookList", allBooksInLibrary);
+            mav.addObject("isSaved", isSaved);
             return mav;
         } else  {
-            mav.addObject("bookList", bookList);
+            mav.addObject("bookList", allBooksInLibrary);
             return mav;
         }
     }
