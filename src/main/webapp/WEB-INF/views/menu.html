@@ -14,7 +14,7 @@
 
     <div th:if="${showuser} != null">
         <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
-            <form action="administrate" method="get" class="headerMain">
+            <form action="admin" method="get" class="headerMain">
                 <input type="submit" value="Admin features"/>
             </form>
         </div>
