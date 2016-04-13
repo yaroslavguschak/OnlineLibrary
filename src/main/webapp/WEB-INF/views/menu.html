@@ -13,16 +13,33 @@
     </form>
 
     <div th:if="${showuser} != null">
+        <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
+            <form action="administrate" method="get" class="headerMain">
+                <input type="submit" value="Admin features"/>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${showuser} != null">
         <form action="logout" method="get" class="headerMain">
             <input type="submit" value="Logout"/>
         </form>
     </div>
+
+
 
     <div th:if="${showuser} == null">
         <form action="login" method="get" class="headerMain">
             <input type="submit" value="Login"/>
         </form>
     </div>
+
+    <div th:if="${showuser} != null">
+        <span style="font-family: monospace; margin-right: 20pt; color: greenyellow; text-align: right; font-size: 12pt"> <span th:text="${showuser.login}"/><span> /</span> <span th:text="${showuser.permission}"/></span>
+    </div>
+
+
+
 
 </nav>
 </body>

@@ -51,7 +51,7 @@ public class LoginController {
 
 
     @RequestMapping(value = "/loginchek", method= RequestMethod.POST)
-    @ResponseBody
+//    @ResponseBody
     public void loginCheck(@ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException, GeneralSecurityException {
         String login = loginRequest.getLogin();
