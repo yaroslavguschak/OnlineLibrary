@@ -51,7 +51,6 @@ public class UserDAO {
         entityManager.getTransaction().commit();
         entityManager.close();
         System.out.println("LOG / User updated in  DB" + user.toString());
-
     }
 
 

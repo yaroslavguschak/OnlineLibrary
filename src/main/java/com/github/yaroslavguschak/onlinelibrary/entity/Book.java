@@ -1,9 +1,12 @@
 package com.github.yaroslavguschak.onlinelibrary.entity;
 
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "book")
+@NamedQueries({ @NamedQuery(name = "User.getBookById", query = "SELECT u FROM Book u where u.id = :bookid")})
 public class Book {
 
     @Id
@@ -56,6 +59,18 @@ public class Book {
         this.isbn = isbn;
         this.pages = pages;
         this.booktext = booktext;
+    }
+
+    public Book updateFromRequest (BookRequest bookRequest){
+        this.author = bookRequest.getAuthor();
+        this.title = bookRequest.getTitle();
+        this.genre = bookRequest.getGenre();
+        this.year = bookRequest.getYear();
+        this.city = bookRequest.getCity();
+        this.isbn = bookRequest.getIsbn();
+        this.pages = bookRequest.getPages();
+        this.booktext = bookRequest.getBooktext();
+        return this;
     }
 
     public Long getId() {
@@ -129,6 +144,10 @@ public class Book {
     public void setBooktext(String text) {
         this.booktext = text;
     }
+
+
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -16,6 +16,17 @@ public class BookDAO {
     @Autowired
     public EntityManagerFactory entityManagerFactory;
 
+    public Book getBookById(Long bookId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Book book = (entityManager.createNamedQuery("User.getBookById", Book.class).setParameter("bookid", bookId))
+                    .getSingleResult();
+            return book;
+        } finally {
+            entityManager.close();
+        }
+    }
+
     public void addBooksToLibrary(List<Book> bookList){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -52,6 +63,16 @@ public class BookDAO {
         entityManager.close();
         System.out.println("LOG / new Book add to DB" + book);
 
+    }
+
+
+    public void updateBook (Book book){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(book);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        System.out.println("LOG / Book updated in  DB" + book.toString());
     }
 
 

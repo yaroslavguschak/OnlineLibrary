@@ -27,36 +27,20 @@
 
 
 
-<form action="#" th:action="@{/shelfaction}"  method="post" style="margin-right:20px">
     <div th:each="book : ${bookList}">
+
         <div class="itemContainer">
-            <div style="display: flex">
-                <h2 style="margin:1px; font-size:13pt; color: lightgrey;font-family: sans-serif "><span th:text="${book.title}"/></h2>
-            </div>
+            <div style="display: flex"><h2 style="margin:1px; font-size:13pt; color: lightgrey;font-family: sans-serif "><span th:text="${book.title}"/></h2></div>
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt"><p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.author}"/></p></div>
 
-            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
-                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.author}"/></p>
-            </div>
 
-            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
-                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.isbn}"/></p>
-            </div>
 
-            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
-                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.genre}"/></p>
-            </div>
 
-            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
-                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.year}"/></p>
-            </div>
-
-            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
-                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.city}"/></p>
-            </div>
-
-            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt">
-                <p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.pages}"/></p>
-            </div>
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt"><p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.isbn}"/></p></div>
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt"><p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.genre}"/></p></div>
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt"><p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.year}"/></p></div>
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt"><p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.city}"/></p></div>
+            <div style="border-top:solid 1px #49545d; border-bottom:solid 1px #49545d; padding-left: 10pt"><p style="margin: 2px; color: antiquewhite;font-family: monospace "><span th:text="${book.pages}"/></p></div>
 
             <div>
                 <details style="color: black; font-size: 10pt">
@@ -67,24 +51,17 @@
                 </details>
             </div>
 
-            <!--DEVELOP ACTION EDIT-->
-            <!--<div th:if="${showuser} != null">-->
-                <!--<form action="shelf" method="post">-->
-                    <!--<input  type="submit" value="Edit book"/>-->
-                <!--</form>-->
-                <!--<span th:text="${showuser.permission}"/>-->
-            <!--</div>-->
-            <!--DEVELOP ACTION EDIT/-->
+            <form action="#" th:action="@{/adminaction}"  method="post" style="margin-right:20px">
+                <input type="hidden" name="bookId" th:value="${book.id}"/>
+                <input type="submit" name="action"  value="Edit"/>
+                <input type="submit" name="action"  value="Delete"/>
+            </form>
+
+
 
         </div>
     </div>
-    <div th:if="${showuser} != null">
-        <input type="hidden" name="action" value="SAVE"/>
-        <input type="submit" value="Save"/>
-    </div>
 
-
-</form>
 
 
 

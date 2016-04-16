@@ -2,7 +2,6 @@ package com.github.yaroslavguschak.onlinelibrary.controllers;
 
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
-import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +21,19 @@ import java.io.IOException;
 @Controller
 public class BookController {
     @Autowired
-    BookDAO dao;
+    BookDAO bookDAO;
 
+    @RequestMapping(value = "/newbook")
+    public ModelAndView registerGet() {
+        final ModelAndView mav = new ModelAndView("/newbook");
+        BookRequest bookRequest = new BookRequest();
+        mav.addObject("bookRequest",bookRequest);
+        return mav;
+    }
 
     @RequestMapping(value = "/doaddbook", method = RequestMethod.POST)
     @ResponseBody
-    public void doRegister(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req, HttpServletResponse resp)
+    public void addBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
             HttpSession httpSession = req.getSession(true);
 
@@ -40,12 +46,7 @@ public class BookController {
                                  bookReq.getPages(),
                                  bookReq.getBooktext()   );
 
-            System.out.println("User CREATED successful: " + book + " in time" + httpSession.getCreationTime());
-            dao.saveNewBook(book);
-        ////
-        Book book2 = new Book("Charles Dickens", "Great Expectations", Genre.DRAMA, 1861, "London", "256-369-456-584", 256, "Story about Great Expectations");
-        dao.saveNewBook(book2);
-        /////
+            bookDAO.saveNewBook(book);
             httpSession.setAttribute("book", book); // це тут потрібно?????
             RequestDispatcher requestDispatcher;
             requestDispatcher = req.getRequestDispatcher("/newbook");
@@ -53,13 +54,29 @@ public class BookController {
 
     }
 
-    @RequestMapping(value = "/newbook")
-    public ModelAndView registerGet() {
-        final ModelAndView mav = new ModelAndView("/newbook");
-        BookRequest bookRequest = new BookRequest();
-        mav.addObject("bookRequest",bookRequest);
-        return mav;
+    @RequestMapping(value = "/doeditbook", method = RequestMethod.POST)
+    @ResponseBody
+    public void editActionBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        Book book = bookDAO.getBookById(bookReq.getId());
+
+        book.updateFromRequest(bookReq);
+        bookDAO.updateBook(book);
+
+        RequestDispatcher requestDispatcher;
+        requestDispatcher = req.getRequestDispatcher("/admin");
+        requestDispatcher.forward(req, resp);
+
+
+//        bookDAO.saveNewBook(book);
+
     }
+
+
+
+
+
 
 
 

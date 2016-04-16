@@ -1,10 +1,13 @@
 package com.github.yaroslavguschak.onlinelibrary.entityrequest;
 
+import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
 
 public class BookRequest {
 
-    private String isbn = "";
+    private Long id = 0L;
+
+    private String  isbn     = "";
     private String  author   = "";
     private String  title    = "";
     private Genre   genre    = Genre.OTHER;
@@ -14,6 +17,26 @@ public class BookRequest {
     private String  booktext = "";
 
     public BookRequest() {
+    }
+
+    public BookRequest(Book book) {
+        this.id = book.getId();
+        this.isbn = book.getIsbn();
+        this.author = book.getAuthor();
+        this.title = book.getTitle();
+        this.genre = book.getGenre();
+        this.year = book.getYear();
+        this.city = book.getCity();
+        this.pages = book.getPages();
+        this.booktext = book.getBooktext();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getIsbn() {
