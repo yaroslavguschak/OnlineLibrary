@@ -34,7 +34,7 @@ public class RegisterController {
             HttpSession httpSession = req.getSession(true);
 
             User user = new User(regReq.getLogin(),regReq.getFirstName(), regReq.getLastName(),
-                                 regReq.getEmail(), regReq.getPermission(), regReq.getPassword());
+                                 regReq.getEmail(), regReq.getPermission(), regReq.getPassword()); // змінити конструктор
             System.out.println("User REGISTER successful: " + user + " in time" + httpSession.getCreationTime());
             ///test code
             user.getShelf().addBook(new Book());

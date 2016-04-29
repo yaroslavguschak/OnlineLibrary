@@ -1,5 +1,6 @@
 package com.github.yaroslavguschak.onlinelibrary.dao;
 
+import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -59,6 +60,14 @@ public class UserDAO {
 //        entityManager.getTransaction().begin();
 
         List <User> userList = (List <User>) entityManager.createQuery("select e from User e").getResultList();
+        entityManager.close();
+        return userList;
+    }
+
+    public List <User> getAllBookOwner(Book book){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        List <User> userList = (List <User>) entityManager.createQuery("select u from User u, IN (u.shelf.bookList) b WHERE b.id = " + book.getId()).getResultList();
         entityManager.close();
         return userList;
     }

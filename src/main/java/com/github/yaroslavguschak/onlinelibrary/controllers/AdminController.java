@@ -45,28 +45,23 @@ public class AdminController {
 
     @RequestMapping(value = "/adminaction" , method= RequestMethod.POST)
     public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession httpSession = req.getSession(true);
-        User user = (User) httpSession.getAttribute("user");
+        Long bookId = Long.valueOf(req.getParameter("bookId"));
+        String action       = req.getParameter("action");
+        Book book = bookDAO.getBookById(bookId);
 
-        if (req.getParameter("action").equals("Edit")) {
-            String stringBookId = req.getParameter("bookId");
-            System.out.print("LOG: " + "user sent book # " + stringBookId + "for editing");
-
-            Book book = bookDAO.getBookById(Long.valueOf(stringBookId));
+        if ("Edit".equals(action)) {
+            System.out.print("LOG: " + "user sent book # " + bookId + "for editing");
             BookRequest bookRequest = new BookRequest(book);
             final ModelAndView mav = new ModelAndView("/editbook");
-
             mav.addObject("bookRequest", bookRequest);
             return mav;
-
-//            userDAO.updateUser(user);
-//            System.out.println("LOG: " + "saving books to shelf... DONE!");
-//            RequestDispatcher requestDispatcher;
-//            requestDispatcher = req.getRequestDispatcher("/library");
-//            requestDispatcher.forward(req, resp);
         }
 
-//
-        return new ModelAndView("/editbook");
+        if ("Delete".equals(action)) {
+            System.out.println("==========LOG: " + "user sent book # " + bookId + "for deleting");
+//            Integer deleteCount = bookDAO.deleteBookById(bookId);
+            bookDAO.deleteBook(book);
+        }
+        return new ModelAndView("redirect:/admin");
     }
 }

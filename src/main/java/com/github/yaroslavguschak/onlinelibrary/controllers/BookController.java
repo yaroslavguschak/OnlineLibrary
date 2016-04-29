@@ -56,7 +56,7 @@ public class BookController {
 
     @RequestMapping(value = "/doeditbook", method = RequestMethod.POST)
     @ResponseBody
-    public void editActionBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req, HttpServletResponse resp)
+    public ModelAndView editActionBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         Book book = bookDAO.getBookById(bookReq.getId());
@@ -64,12 +64,7 @@ public class BookController {
         book.updateFromRequest(bookReq);
         bookDAO.updateBook(book);
 
-        RequestDispatcher requestDispatcher;
-        requestDispatcher = req.getRequestDispatcher("/admin");
-        requestDispatcher.forward(req, resp);
-
-
-//        bookDAO.saveNewBook(book);
+        return new ModelAndView("redirect:/admin");
 
     }
 

@@ -11,8 +11,8 @@ public class Shelf {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @OneToMany(fetch = FetchType.EAGER)
+//cascade=CascadeType.ALL
+    @OneToMany(fetch =   FetchType.EAGER)
     private List <Book> bookList = new ArrayList<>();
 
 
@@ -79,17 +79,8 @@ public class Shelf {
         this.bookList.add(book);
     }
 
-    public void delById(Long bookId){
-        int i = 0;
-        boolean notFind = true;
-        while (notFind && i < this.getBookList().size()) {
-            if (this.getBookList().get(i).getId().equals(bookId)){
-                this.getBookList().remove(i);
-                notFind = false;
-            } else {
-                ++i;
-            }
-        };
+    public void delFromShelf(Book book){
+        this.getBookList().remove(book);//////////
 
     }
 

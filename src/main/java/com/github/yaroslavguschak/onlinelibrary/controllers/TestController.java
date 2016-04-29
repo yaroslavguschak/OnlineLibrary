@@ -6,11 +6,13 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
 import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
+import com.github.yaroslavguschak.onlinelibrary.util.PDFconverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
@@ -26,14 +28,13 @@ public class TestController {
 
     @RequestMapping(value = "/test")
     @ResponseBody
-    public String test() throws GeneralSecurityException {
-
+    public String test() throws GeneralSecurityException, IOException {
         return  fillDB();
     }
 
 
 
-    private String fillDB() throws GeneralSecurityException {
+    private String fillDB() throws GeneralSecurityException, IOException {
 
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("Wellcome in test controller");
@@ -47,7 +48,10 @@ public class TestController {
         Book book1 = new Book("Панас Мирний", "Хіба ревуть воли, як ясла повні", Genre.TRAGEDY, 1865, "Київ", "464-155-813-634", 298, "Історія про волів і не тільки");
         bookDAO.saveNewBook(book1);
 
-        List<Book> bookList = bookDAO.getAllUser();
+        String result = PDFconverter.convertToPDF(book);
+        stringBuffer.append(result);
+
+        List<Book> bookList = bookDAO.getAllBooks();
 
         for (Book b : bookList) {
             System.out.println(b.toString());

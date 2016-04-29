@@ -4,10 +4,8 @@ import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
-import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -35,8 +32,13 @@ public class ShelfController {
     public ModelAndView showShelf(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
+        user = userDAO.getUserById(user.getId());
 
         final ModelAndView mav = new ModelAndView("/shelf");
+
+        System.out.println("****************WHAT IS IN A USER????**********************************");
+        System.out.println(user.getShelf().getBookList().size());
+        System.out.println("***********************************END**********************************");
 
         if (user != null){
             httpSession.setAttribute("bookList", user.getShelf().getBookList());
@@ -56,6 +58,8 @@ public class ShelfController {
     public void archiveAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
+        user = userDAO.getUserById(user.getId());
+
         List<Book> bookListFromView = (List<Book>) httpSession.getAttribute("bookList");
 
         if (req.getParameter("action").equals("SAVE")){
@@ -88,7 +92,7 @@ public class ShelfController {
 
             for (int i = 0; i < bookListFromView.size(); ++i ) {
                 if (req.getParameter(String.valueOf(i))!= null && req.getParameter(String.valueOf(i)).equals("delete")){
-                    user.getShelf().delById(bookListFromView.get(i).getId());
+                    user.getShelf().delFromShelf(bookListFromView.get(i));
                 }
                 System.out.println("<>" +  i  + " " + req.getParameter( String.valueOf(i) ));
             }
@@ -96,6 +100,12 @@ public class ShelfController {
 
             System.out.println("/-/-/*-/-/-/-/-/*-/-/-/*-/*-/" + user);
             userDAO.updateUser(user);
+//            httpSession.setAttribute("user", user);
+            System.out.println("****************WHAT IS IN A SESSION????**********************************");
+            System.out.println(user.getShelf().getBookList().size());
+            System.out.println("***********************************END**********************************");
+
+
             System.out.println("LOG: " + "deleting items... DONE!");
 //            userDAO.saveDefoltUser();
             RequestDispatcher requestDispatcher;

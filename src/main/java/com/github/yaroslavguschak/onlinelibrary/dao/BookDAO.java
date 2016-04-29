@@ -7,11 +7,14 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.util.List;
 
 @Component
 public class BookDAO {
 
+    @Autowired
+    UserDAO userDAO;
 
     @Autowired
     public EntityManagerFactory entityManagerFactory;
@@ -19,13 +22,47 @@ public class BookDAO {
     public Book getBookById(Long bookId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            Book book = (entityManager.createNamedQuery("User.getBookById", Book.class).setParameter("bookid", bookId))
-                    .getSingleResult();
-            return book;
+//            Book book = (entityManager.createNamedQuery("Book.getBookById", Book.class).setParameter("bookid", bookId))
+//                    .getSingleResult();
+            return entityManager.find(Book.class, bookId);
         } finally {
             entityManager.close();
         }
     }
+
+    public Integer deleteBookById(Long bookId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Query query = entityManager.createQuery("DELETE FROM Book b WHERE b.id = :bookid");
+            Integer deletedCount = query.setParameter("bookid", bookId).executeUpdate();
+            return deletedCount;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public void deleteBook(Book book) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List <User> allBookOwnerList = userDAO.getAllBookOwner(book);
+        System.out.println("======///USERS FOR DEL BOOK///=========");
+        System.out.println(allBookOwnerList.toString() + "SIZE:  " + allBookOwnerList.size());
+        System.out.println("======///USERS FOR DEL BOOK///=========");
+
+        for (User user : allBookOwnerList) {
+             user.getShelf().getBookList().remove(book);
+            userDAO.updateUser(user);
+        }
+
+
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.remove(entityManager.contains(book) ? book : entityManager.merge(book));
+            entityManager.getTransaction().commit();
+        } finally {
+            entityManager.close();
+        }
+    }
+
 
     public void addBooksToLibrary(List<Book> bookList){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -83,14 +120,14 @@ public class BookDAO {
 
 
 
-    public List <Book> getAllUser(){
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-
-        List <Book> bookList = (List <Book>) entityManager.createQuery("select e from Book e").getResultList();
-        entityManager.close();
-        return bookList;
-    }
+//    public List <Book> getAllUser(){
+//        EntityManager entityManager = entityManagerFactory.createEntityManager();
+//        entityManager.getTransaction().begin();
+//
+//        List <Book> bookList = (List <Book>) entityManager.createQuery("select e from Book e").getResultList();
+//        entityManager.close();
+//        return bookList;
+//    }
 
 
 

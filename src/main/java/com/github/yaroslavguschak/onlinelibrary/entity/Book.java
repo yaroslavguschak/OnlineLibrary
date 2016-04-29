@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "book")
-@NamedQueries({ @NamedQuery(name = "User.getBookById", query = "SELECT u FROM Book u where u.id = :bookid")})
+@NamedQueries({ @NamedQuery(name = "Book.getBookById",    query = "SELECT b FROM Book b WHERE b.id = :bookid")})
 public class Book {
 
     @Id
@@ -37,6 +37,18 @@ public class Book {
 
     @Column(name = "booktext",columnDefinition="text")
     private String booktext;
+
+//    @Basic(fetch=FetchType.EAGER)
+    @Column(name = "pdf")
+    private byte[] pdf;
+
+    public byte[] getPdf() {
+        return pdf;
+    }
+
+    public void setPdf(byte[] pdf) {
+        this.pdf = pdf;
+    }
 
     public Book() {
         this.author = "no_author";
