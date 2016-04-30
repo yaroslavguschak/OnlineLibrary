@@ -4,6 +4,8 @@ target/
 bin/
 node_modules/
 src/main/webapp/resources/css
+src/main/webapp/resources/downloads
+src/tmp
 .settings/
 .idea/
 *.iml

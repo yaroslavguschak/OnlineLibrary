@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
@@ -21,31 +23,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class FileDownloadController {
 
-    private static final String INTERNAL_FILE="irregular-verbs-list.pdf";
-    private static final String EXTERNAL_FILE_PATH="C:/mytemp/SpringMVCHibernateManyToManyCRUDExample.zip";
+    //    private static final String EXTERNAL_FILE_PATH="C:/mytemp/SpringMVCHibernateManyToManyCRUDExample.zip";
 
 
-    @RequestMapping(value={"/","/welcome"}, method = RequestMethod.GET)
-    public String getHomePage(ModelMap model) {
-        return "welcome";
-    }
 
-    /*
-     * Download a file from
-     *   - inside project, located in resources folder.
-     *   - outside project, located in File system somewhere.
-     */
-    @RequestMapping(value="/download/{type}", method = RequestMethod.GET)
-    public void downloadFile(HttpServletResponse response, @PathVariable("type") String type) throws IOException {
+    @RequestMapping(value="/download/{book}", method = RequestMethod.GET)
+    public void downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("book") String book) throws IOException {
+
+        String filePath= "\\resources\\downloads\\book25.pdf";
 
         File file = null;
 
-        if(type.equalsIgnoreCase("internal")){
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            file = new File(classloader.getResource(INTERNAL_FILE).getFile());
-        }else{
-            file = new File(EXTERNAL_FILE_PATH);
+        if(book.equalsIgnoreCase("book25.pdf")){
+            ServletContext context = request.getServletContext();
+            String appPath = context.getRealPath("");
+            String fullPath = appPath + filePath;
+            System.out.println("Prepare file for downloading: " + filePath);
+
+            file = new File(fullPath);
         }
+//        else{
+//        }
 
         if(!file.exists()){
             String errorMessage = "Sorry. The file you are looking for does not exist";
@@ -56,13 +54,13 @@ public class FileDownloadController {
             return;
         }
 
-        String mimeType= URLConnection.guessContentTypeFromName(file.getName());
+        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         if(mimeType==null){
             System.out.println("mimetype is not detectable, will take default");
             mimeType = "application/octet-stream";
         }
 
-        System.out.println("mimetype : "+mimeType);
+        System.out.println("mimetype : " + mimeType);
 
         response.setContentType(mimeType);
 

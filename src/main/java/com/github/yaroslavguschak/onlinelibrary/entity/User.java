@@ -34,8 +34,6 @@ public class User {
     @Column(name = "permission")
     private Permission permission;
 
-
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     Shelf shelf;

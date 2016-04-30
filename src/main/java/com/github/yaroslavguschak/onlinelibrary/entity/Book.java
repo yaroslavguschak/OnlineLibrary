@@ -42,13 +42,11 @@ public class Book {
     @Column(name = "pdf")
     private byte[] pdf;
 
-    public byte[] getPdf() {
-        return pdf;
-    }
+//    @Basic(fetch=FetchType.EAGER)
+    @Column(name = "img")
+    private byte[] img;
 
-    public void setPdf(byte[] pdf) {
-        this.pdf = pdf;
-    }
+
 
     public Book() {
         this.author = "no_author";
@@ -157,9 +155,21 @@ public class Book {
         this.booktext = text;
     }
 
+    public byte[] getPdf() {
+        return pdf;
+    }
 
+    public void setPdf(byte[] pdf) {
+        this.pdf = pdf;
+    }
 
+    public byte[] getImg() {
+        return img;
+    }
 
+    public void setImg(byte[] img) {
+        this.img = img;
+    }
 
     @Override
     public boolean equals(Object o) {
