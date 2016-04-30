@@ -18,7 +18,7 @@ public class PDFconverter {
     }
 
     public static String convertToPDF(Book book) {
-        String fileName = "src\\tmp\\pdf\\book" + book.getId() + ".pdf"; // name of our file
+        String fileName = "temp\\book" + book.getId() + ".pdf"; // name of our file
         try{
 
             System.out.println("Create PDF file from Book " + book.toString() + "...");

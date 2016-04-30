@@ -23,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class FileDownloadController {
 
-    //    private static final String EXTERNAL_FILE_PATH="C:/mytemp/SpringMVCHibernateManyToManyCRUDExample.zip";
-
-
-
     @RequestMapping(value="/download/{book}", method = RequestMethod.GET)
     public void downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("book") String book) throws IOException {
 
