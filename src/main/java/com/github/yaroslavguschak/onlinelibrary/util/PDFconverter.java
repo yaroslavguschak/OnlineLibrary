@@ -17,8 +17,10 @@ public class PDFconverter {
     private PDFconverter(){
     }
 
-    public static String convertToPDF(Book book) {
-        String fileName = "temp\\book" + book.getId() + ".pdf"; // name of our file
+    public static File convertToPDF(Book book) {
+        String fileName = "temp\\book_"+ book.getId() + "_" + book.getIsbn() + ".pdf"; // name of our file
+        File pdfFile = new File(fileName);
+
         try{
 
             System.out.println("Create PDF file from Book " + book.toString() + "...");
@@ -58,20 +60,24 @@ public class PDFconverter {
 
 
             content.close();
-            doc.save(fileName);
+            doc.save(pdfFile);
             doc.close();
 
             System.out.println("your file created in : "+ System.getProperty("user.dir"));
 
         }
         catch(IOException  e){
-
             System.out.println(e.getMessage());
-
         }
+        return pdfFile;
+    }
 
 
 
-        return fileName;
-        }
+
+    public static byte[] convertToByte(Book book) throws IOException {
+        return FileOperator.readBytesFromFile(PDFconverter.convertToPDF(book));
+
+    }
+
 }

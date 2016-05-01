@@ -13,6 +13,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
+import com.github.yaroslavguschak.onlinelibrary.entity.Book;
+import com.github.yaroslavguschak.onlinelibrary.util.FileOperator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
@@ -22,22 +26,35 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class FileDownloadController {
+    @Autowired
+    BookDAO bookDAO;
 
-    @RequestMapping(value="/download/{book}", method = RequestMethod.GET)
-    public void downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("book") String book) throws IOException {
+    @RequestMapping(value="/download/{bookIdDotPDF}", method = RequestMethod.GET)
+    public void downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("bookIdDotPDF") String bookIdDotPDF) throws IOException {
 
-        String filePath= "\\resources\\downloads\\book25.pdf";
+        String stringBookID = bookIdDotPDF.substring(0, bookIdDotPDF.length() - 4);
 
+        Book book = bookDAO.getBookById(Long.parseLong(stringBookID));
+
+
+
+
+        ServletContext context = request.getServletContext();
+        String appPath = context.getRealPath("");
+
+        String filePath= "\\resources\\downloads\\book"+ book.getId() + ".pdf";
+        String fullPath = appPath + filePath;
+//        File pdfFile = new File(filePath);
+//        pdfFile.createNewFile();
         File file = null;
+        file = new File(fullPath);
+        FileOperator.saveBytesToFile(file, book.getPdf());
 
-        if(book.equalsIgnoreCase("book25.pdf")){
-            ServletContext context = request.getServletContext();
-            String appPath = context.getRealPath("");
-            String fullPath = appPath + filePath;
-            System.out.println("Prepare file for downloading: " + filePath);
 
-            file = new File(fullPath);
-        }
+//        if(bookIdDotPDF.equalsIgnoreCase("book25.pdf")){
+        System.out.println("Prepare file for downloading: " + filePath);
+
+//        }
 //        else{
 //        }
 
@@ -74,6 +91,7 @@ public class FileDownloadController {
 
         //Copy bytes from source to destination(outputstream in this example), closes both streams.
         FileCopyUtils.copy(inputStream, response.getOutputStream());
+        file.delete();
     }
 
 }

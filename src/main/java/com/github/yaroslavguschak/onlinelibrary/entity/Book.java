@@ -1,8 +1,10 @@
 package com.github.yaroslavguschak.onlinelibrary.entity;
 
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
+import com.github.yaroslavguschak.onlinelibrary.util.PDFconverter;
 
 import javax.persistence.*;
+import java.io.IOException;
 
 @Entity
 @Table(name = "book")
@@ -69,6 +71,11 @@ public class Book {
         this.isbn = isbn;
         this.pages = pages;
         this.booktext = booktext;
+        try {
+            this.pdf = PDFconverter.convertToByte(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Book updateFromRequest (BookRequest bookRequest){

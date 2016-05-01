@@ -45,11 +45,11 @@ public class TestController {
         bookDAO.saveNewBook(book);
         book = new Book("Jack London", "White Fang", Genre.REALISTIC_FICTION, 1906, "New York", "978-185-813-634", 298, "Story about White Fang");
         bookDAO.saveNewBook(book);
-        Book book1 = new Book("Панас Мирний", "Хіба ревуть воли, як ясла повні", Genre.TRAGEDY, 1865, "Київ", "464-155-813-634", 298, "Історія про волів і не тільки");
+        Book book1 = new Book("Hello world", "Hello world2", Genre.TRAGEDY, 1865, "Rome", "464-155-813-888", 445, "Very sad story");
         bookDAO.saveNewBook(book1);
 
-        String result = PDFconverter.convertToPDF(book);
-        stringBuffer.append(result);
+//        String result = PDFconverter.convertToPDF(book).toString();
+//        stringBuffer.append(result);
 
         List<Book> bookList = bookDAO.getAllBooks();
 
