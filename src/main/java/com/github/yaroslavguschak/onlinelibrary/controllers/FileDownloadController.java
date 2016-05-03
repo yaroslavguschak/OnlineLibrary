@@ -18,7 +18,6 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.util.FileOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +31,7 @@ public class FileDownloadController {
     @RequestMapping(value="/download/{bookIdDotPDF}", method = RequestMethod.GET)
     public void downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("bookIdDotPDF") String bookIdDotPDF) throws IOException {
 
-        String stringBookID = bookIdDotPDF.substring(0, bookIdDotPDF.length() - 4);
+        String stringBookID = bookIdDotPDF.substring(0, bookIdDotPDF.length() - 4); //cut extension
 
         Book book = bookDAO.getBookById(Long.parseLong(stringBookID));
 

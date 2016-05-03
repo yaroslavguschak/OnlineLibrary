@@ -72,7 +72,7 @@ public class Book {
         this.pages = pages;
         this.booktext = booktext;
         try {
-            this.pdf = PDFconverter.convertToByte(this);
+            this.pdf = PDFconverter.convertToPdfByte(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,6 +87,11 @@ public class Book {
         this.isbn = bookRequest.getIsbn();
         this.pages = bookRequest.getPages();
         this.booktext = bookRequest.getBooktext();
+        try {
+            this.pdf = PDFconverter.convertToPdfByte(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 

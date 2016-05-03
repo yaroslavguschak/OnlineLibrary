@@ -2,6 +2,8 @@ package com.github.yaroslavguschak.onlinelibrary.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -9,6 +11,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
@@ -25,46 +28,109 @@ public class PDFconverter {
 
             System.out.println("Create PDF file from Book " + book.toString() + "...");
 
-
             PDDocument doc = new PDDocument(); //IOC
             PDPage page = new PDPage();        //IOC
 
             doc.addPage(page);
+            PDPageContentStream contentStream = new PDPageContentStream(doc, page);
 
-            PDPageContentStream content = new PDPageContentStream(doc, page);
+            PDFont pdfFont = PDType1Font.HELVETICA;
+            float fontSize = 10;
+            float leading = 1.5f * fontSize;
 
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 26);
-            content.newLineAtOffset(220, 750);
-            content.showText(book.getTitle());
-            content.endText();
+            PDRectangle mediabox = page.getMediaBox();
+            float margin = 72;
+            float width = mediabox.getWidth() - 2*margin;
+            float height = (mediabox.getHeight() - 2*margin);
+            float startX = mediabox.getLowerLeftX() + margin;
+            float startY = mediabox.getUpperRightY() - margin;
+
+            String text = book.getBooktext();
+            List<String> lines = new ArrayList<String>();
+            int lastSpace = -1;
+            while (text.length() > 0)
+            {
+                int spaceIndex = text.indexOf(' ', lastSpace + 1);
+                if (spaceIndex < 0){
+                    spaceIndex = text.length();}
+
+                String subString = text.substring(0, spaceIndex);
+                float size = fontSize * pdfFont.getStringWidth(subString) / 1000;
+                if (size > width)
+                {
+                    if (lastSpace < 0)
+                        lastSpace = spaceIndex;
+                    subString = text.substring(0, lastSpace);
+                    lines.add(subString);
+                    text = text.substring(lastSpace).trim();
+                    lastSpace = -1;
+                }
+                else if (spaceIndex == text.length()){
+                    lines.add(text);
+                    text = "";}
+                    else { lastSpace = spaceIndex;
+                    }
+            }
+
+            int maxLine = (int) (height / leading);
+            int lineCount = 0;
+            int pageCount = 1;
+
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD_OBLIQUE, fontSize);
+            contentStream.newLineAtOffset(startX, startY);
+
+            //**printing book title, author, isbn...*
+
+            contentStream.showText(book.getTitle());
+            contentStream.newLineAtOffset(0, -leading);
+            ++lineCount;
+
+            contentStream.showText(book.getAuthor());
+            contentStream.newLineAtOffset(0, -leading);
+            ++lineCount;
+
+            contentStream.showText(book.getGenre().toString().substring(0,1) +
+                    book.getGenre().toString().toLowerCase().replace('_', ' ').substring(1,book.getGenre().toString().length()));
+            contentStream.newLineAtOffset(0, -leading);
+            ++lineCount;
+
+            contentStream.showText(book.getCity() + ", " + book.getYear());
+            contentStream.newLineAtOffset(0, -leading);
+            ++lineCount;
+
+            contentStream.setFont(pdfFont, fontSize);
+//            contentStream.newLineAtOffset(startX, startY);
+
+            for (String line: lines) {
+                if (lineCount < maxLine){
+                    ++lineCount;
+                } else {
+                    //**printing a page number *
+                    contentStream.setFont(PDType1Font.TIMES_BOLD, 15);
+                    contentStream.newLineAtOffset(200, -leading);
+                    contentStream.showText("page " + pageCount);
+                    contentStream.endText();
+                    contentStream.close();
+
+                    //**creating a new page, set font and position
+                    page = new PDPage();
+                    doc.addPage(page);
+                    contentStream = new PDPageContentStream(doc,page);
+                    contentStream.beginText();
+                    contentStream.setFont(pdfFont, fontSize);
+                    contentStream.newLineAtOffset(startX, startY);
+                    lineCount = 0;
+                    ++pageCount;
+                }
+                contentStream.showText(line);
+                contentStream.newLineAtOffset(0, -leading);
+            }
+            contentStream.endText();
+            contentStream.close();
 
 
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 16);
-            content.newLineAtOffset(80, 700);
-            content.showText("isbn : " + book.getIsbn());
-            content.endText();
-
-
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 16);
-            content.newLineAtOffset(80,650);
-            content.showText("Father Name : ");
-            content.endText();
-
-            content.beginText();
-            content.newLineAtOffset(80,600);
-            content.showText("DOB : ");
-            content.endText();
-
-
-            content.close();
-            doc.save(pdfFile);
-            doc.close();
-
-            System.out.println("your file created in : "+ System.getProperty("user.dir"));
-
+            doc.save(fileName);
         }
         catch(IOException  e){
             System.out.println(e.getMessage());
@@ -75,7 +141,7 @@ public class PDFconverter {
 
 
 
-    public static byte[] convertToByte(Book book) throws IOException {
+    public static byte[] convertToPdfByte(Book book) throws IOException {
         return FileOperator.readBytesFromFile(PDFconverter.convertToPDF(book));
 
     }
