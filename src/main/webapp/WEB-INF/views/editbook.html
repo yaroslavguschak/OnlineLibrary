@@ -10,7 +10,7 @@
 
 <div style="display: flex" th:include="menu :: header">Menu</div>
 
-<form action="#" th:action="@{/doeditbook}"  th:object="${bookRequest}" method="post">
+<form action="#" th:action="@{/doeditbook}"  th:object="${bookRequest}" method="post" enctype="multipart/form-data">
     <div class="main">
 
         <div  style="display:block; margin-bottom: 10px">
@@ -40,6 +40,13 @@
             <div class="field">
                 <label class="little" for="title">title:</label>
                 <input type="text" th:field="*{title}"  class="input" />
+            </div>
+        </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="title">annotation:</label>
+                <input type="text" th:field="*{annotation}"  class="input" />
             </div>
         </div>
 
@@ -79,6 +86,15 @@
                 <input type="text" th:field="*{booktext}"  class="input" />
             </div>
         </div>
+
+        <div  style="display:block; margin-bottom: 10px">
+            <div class="field">
+                <label class="little" for="cover">booktext:</label>
+                <!--<input type="file" th:field="*{img}"  class="input" />-->
+                <input type="file" name="cover"  class="input" />
+            </div>
+        </div>
+
 
 
 

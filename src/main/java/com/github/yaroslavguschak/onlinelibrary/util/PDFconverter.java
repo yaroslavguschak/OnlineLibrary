@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class PDFconverter {
@@ -34,7 +35,10 @@ public class PDFconverter {
             doc.addPage(page);
             PDPageContentStream contentStream = new PDPageContentStream(doc, page);
 
-            PDFont pdfFont = PDType1Font.HELVETICA;
+            File fontFile = new File("fonts\\serif.ttf");
+            PDType0Font font = PDType0Font.load(doc, fontFile);
+            PDFont pdfFont = font;
+//            PDFont pdfFont = PDType1Font.TIMES_ROMAN;
             float fontSize = 10;
             float leading = 1.5f * fontSize;
 
@@ -46,6 +50,8 @@ public class PDFconverter {
             float startY = mediabox.getUpperRightY() - margin;
 
             String text = book.getBooktext();
+            text = text.replace('\n',' ');
+            text = text.replace('\t',' ');
             List<String> lines = new ArrayList<String>();
             int lastSpace = -1;
             while (text.length() > 0)
@@ -130,6 +136,7 @@ public class PDFconverter {
             contentStream.close();
 
 
+            book.setPages(pageCount);
             doc.save(fileName);
         }
         catch(IOException  e){
@@ -142,7 +149,7 @@ public class PDFconverter {
 
 
     public static byte[] convertToPdfByte(Book book) throws IOException {
-        return FileOperator.readBytesFromFile(PDFconverter.convertToPDF(book));
+        return FileOperator.readBytesFromFileAndDel(PDFconverter.convertToPDF(book));
 
     }
 

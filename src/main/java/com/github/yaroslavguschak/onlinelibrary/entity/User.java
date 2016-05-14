@@ -1,9 +1,12 @@
 package com.github.yaroslavguschak.onlinelibrary.entity;
 
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.RegisterRequest;
 import com.github.yaroslavguschak.onlinelibrary.util.CSHA1Util;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.security.GeneralSecurityException;
+
 
 @Entity
 @Table(name = "libuser")
@@ -61,6 +64,16 @@ public class User {
         this.shelf = new Shelf();
     }
 
+    public User(RegisterRequest registerRequest) throws GeneralSecurityException {
+        this.login        = registerRequest.getLogin();
+        this.firstName    = registerRequest.getFirstName();
+        this.lastName     = registerRequest.getLastName();
+        this.email        = registerRequest.getEmail();
+        this.passwordhash = CSHA1Util.getSHA1String(registerRequest.getPassword());
+        this.permission   = registerRequest.getPermission();
+        this.shelf        = new Shelf();
+    }
+
     public Long getId() {
         return id;
     }
@@ -76,6 +89,7 @@ public class User {
         return login;
     }
 
+
     public void setLogin(String login) {
         this.login = login;
     }
@@ -83,6 +97,7 @@ public class User {
     public String getFirstName() {
         return firstName;
     }
+
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -134,13 +149,14 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "nickname='" + login + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", permission=" + permission +
-                '}';
+        return '\n' + "===== USER ID: " + id + " ======================================" + '\n' +
+                "   login:        " + login +  '\n'+
+                "   firstName:    " + firstName + '\n' +
+                "   lastName:     " + lastName + '\n' +
+                "   email:        " + email + '\n' +
+                "   permission:   " + permission + '\n' +
+                "   passwordhash: " + passwordhash + '\n' +
+                "=======================================================";
     }
 }
 

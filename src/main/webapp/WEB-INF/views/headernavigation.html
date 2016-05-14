@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../../../resources/css/style.css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" href="../../../resources/css/normalize.css" th:href="@{/resources/css/normalize.css}" />
+</head>
+    <body>
+    <!--HEADER-->
+    <header class="header" th:fragment="header">
+        <div class="container">
+            <h1>Online Java library</h1>
+            <h2>
+                <small> Best way to learn java online!</small>
+            </h2>
+        </div>
+    </header>
+
+    <!--/HEADER-->
+
+
+    <!--NAVIGATION-->
+        <nav class="page-navigation" th:fragment="navigation">
+            <div class="container">
+                <ul>
+                    <li><a href="shelf">Shelf</a></li>
+                    <li><a href="library">Lirary</a></li>
+                    <li th:if="${showuser} == null"><a href="login" method="get">Login</a></li>
+                    <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a> <span th:text="${showuser.login} + ${showuser.permission}"></span></li>
+                </ul>
+                <!--LOGIN FORM-->
+                <div th:if="${showuser} != null">
+                    <form action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
+                            <input type="text" th:field="*{login}" required="required"/>
+                            <input type="password" th:field="*{password}" required="required"/>
+                            <input type="submit" value="Login"/>
+                    </form>
+                 </div>
+                <!--/LOGIN FORM-->
+            </div>
+        </nav>
+    <!--/NAVIGATION-->
+    </body>
+</html>

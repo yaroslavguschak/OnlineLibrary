@@ -24,9 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class FileDownloadController {
+public class PdfDownloadController {
     @Autowired
     BookDAO bookDAO;
+
+    @Autowired
+    ServletContext context;
 
     @RequestMapping(value="/download/{bookIdDotPDF}", method = RequestMethod.GET)
     public void downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("bookIdDotPDF") String bookIdDotPDF) throws IOException {
@@ -38,7 +41,7 @@ public class FileDownloadController {
 
 
 
-        ServletContext context = request.getServletContext();
+//        ServletContext context = request.getServletContext();
         String appPath = context.getRealPath("");
 
         String filePath= "\\resources\\downloads\\book"+ book.getId() + ".pdf";

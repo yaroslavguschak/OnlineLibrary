@@ -2,7 +2,9 @@ package com.github.yaroslavguschak.onlinelibrary.controllers;
 
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
+import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +55,20 @@ public class LibraryController {
             return mav;
         }
     }
+
+
+    @RequestMapping(value = "/index")
+    public ModelAndView showIndex(HttpServletRequest req, HttpServletResponse resp) throws GeneralSecurityException {
+        HttpSession httpSession = req.getSession(true);
+        User user = (User)httpSession.getAttribute("user");
+        final ModelAndView mav = new ModelAndView("/index");
+        mav.addObject("showuser", user);
+        mav.addObject("loginRequest",new LoginRequest()); // спочатку перевірка, чи є в сесії користувач; якщо не має, кладеться реквест, якщо є - користувач
+        mav.addObject("bookList", bookDAO.getAllBooks());
+
+        return mav;
+    }
+
 
 
 

@@ -4,24 +4,55 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.common.io.ByteStreams;
+
+
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+
 /** create, edit books*/
 @Controller
 public class BookController {
     @Autowired
     BookDAO bookDAO;
+
+    @Autowired
+    ServletContext context;
+
+    /* Get book title img */
+    @RequestMapping(value = "/img/{bookId}")
+    public ResponseEntity<byte[]> getuseravatar(@PathVariable String bookId) {
+        final String noPhoto = "/resources/images/NoImageAvailable.jpg";
+        final HttpHeaders headers = new HttpHeaders();
+        byte[] result = bookDAO.getBookById(Long.valueOf(bookId)).getImg();
+        if (result != null) {
+            headers.setContentType(MediaType.IMAGE_JPEG);
+        } else {
+            headers.setContentType(MediaType.IMAGE_PNG);
+            try {
+                result = ByteStreams.toByteArray(context.getResourceAsStream(noPhoto));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        headers.setContentLength(result.length);
+        return new ResponseEntity<byte[]> (result, headers, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/newbook")
     public ModelAndView registerGet() {
@@ -39,6 +70,7 @@ public class BookController {
 
             Book book = new Book(bookReq.getAuthor(),
                                  bookReq.getTitle(),
+                                 bookReq.getAnnotation(),
                                  bookReq.getGenre(),
                                  bookReq.getYear(),
                                  bookReq.getCity(),
@@ -56,8 +88,10 @@ public class BookController {
 
     @RequestMapping(value = "/doeditbook", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView editActionBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req, HttpServletResponse resp)
+    public ModelAndView editActionBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req,
+                                       HttpServletResponse resp,  @RequestParam("cover") MultipartFile cover)
             throws ServletException, IOException {
+            bookReq.setImg(cover.getBytes());
 
         Book book = bookDAO.getBookById(bookReq.getId());
 
@@ -68,7 +102,13 @@ public class BookController {
 
     }
 
+    @RequestMapping(value = "/book/{bookId}", method = RequestMethod.GET)
+    public @ResponseBody Book getBookInXML(@PathVariable String bookId) {
 
+        Book book = bookDAO.getBookById(Long.parseLong(bookId));
+
+        return book;
+    }
 
 
 

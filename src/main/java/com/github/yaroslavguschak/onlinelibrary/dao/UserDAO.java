@@ -21,7 +21,7 @@ public class UserDAO {
         entityManager.persist(user);
         entityManager.getTransaction().commit();
         entityManager.close();
-        System.out.println("LOG / new User add to DB" + user.toString());
+        System.out.println("LOG / new User add to DB. User ID: " + user.getId() + " User login: " +  user.getLogin());
 
     }
 

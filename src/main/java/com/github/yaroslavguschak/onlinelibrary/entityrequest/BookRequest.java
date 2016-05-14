@@ -10,11 +10,13 @@ public class BookRequest {
     private String  isbn     = "";
     private String  author   = "";
     private String  title    = "";
+    private String annotation = "";
     private Genre   genre    = Genre.OTHER;
     private int     year     = 0;
     private String  city     = "";
     private int     pages    = 0;
     private String  booktext = "";
+    private byte[] img;
 
     public BookRequest() {
     }
@@ -24,6 +26,7 @@ public class BookRequest {
         this.isbn = book.getIsbn();
         this.author = book.getAuthor();
         this.title = book.getTitle();
+        this.annotation = book.getAnnotation();
         this.genre = book.getGenre();
         this.year = book.getYear();
         this.city = book.getCity();
@@ -61,6 +64,14 @@ public class BookRequest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
     }
 
     public Genre getGenre() {
@@ -101,5 +112,13 @@ public class BookRequest {
 
     public void setBooktext(String booktext) {
         this.booktext = booktext;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 }

@@ -10,13 +10,22 @@ import java.io.IOException;
  */
 public class FileOperator {
 
-    public static byte[] readBytesFromFile(File inputFile) throws IOException {
+    public static byte[] readBytesFromFileAndDel(File inputFile) throws IOException {
 //        File inputFile = new File(filePath);
         FileInputStream inputStream = new FileInputStream(inputFile);
         byte[] fileBytes = new byte[(int) inputFile.length()];
         inputStream.read(fileBytes);
         inputStream.close();
         inputFile.delete();
+        return fileBytes;
+    }
+
+    public static byte[] readBytesFromFile(File inputFile) throws IOException {
+//        File inputFile = new File(filePath);
+        FileInputStream inputStream = new FileInputStream(inputFile);
+        byte[] fileBytes = new byte[(int) inputFile.length()];
+        inputStream.read(fileBytes);
+        inputStream.close();
         return fileBytes;
     }
 

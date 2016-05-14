@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Java Lib</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../../../resources/css/style.css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" href="../../../resources/css/normalize.css" th:href="@{/resources/css/normalize.css}" />
+</head>
+
+<body>
+<!--HEADER-->
+<header class="header">
+    <div class="container">
+        <h1>Online Java library</h1>
+        <h2>
+            <small> Best way to learn java online!</small>
+        </h2>
+
+    </div>
+</header>
+<!--/HEADER-->
+<!--NAVIGATION-->
+<nav class="page-navigation">
+    <div th:if="${showuser} != null">
+        <div class="user-info" th:text="${showuser.login} +' / ' + ${showuser.permission}"></div>
+    </div>
+    <div class="container">
+
+        <ul>
+            <li><a href="shelf">Shelf</a></li>
+            <li><a href="library">Lirary</a></li>
+            <li th:if="${showuser} == null"><a href="login" method="get">Login</a></li>
+            <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a></li>
+            <!--<li><div class="user-info" th:text="${showuser.login} + ' ' + ${showuser.permission}"></div></li>-->
+        </ul>
+        <!--LOGIN FORM-->
+        <div th:if="${showuser} == null">
+            <form class="login" action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
+                <input type="text" th:field="*{login}" required="required" autofocus="true"/>
+                <input type="password" th:field="*{password}" required="required"/>
+                <input type="submit" value="Login"/>
+            </form>
+        </div>
+        <div th:if="${showuser} != null">
+            <form class="login" action="#" th:action="@{/search}"  method="get">
+                <select  name="genre" >
+                    <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}" th:value="${state}" th:text="${state}"></option>
+                </select>
+                <input type="text" name="search" placeholder="Author or title..." autofocus="true"/>
+
+                <input type="submit" value="Search"/>
+            </form>
+        </div>
+
+        <!--/LOGIN FORM-->
+    </div>
+</nav>
+<!--/NAVIGATION-->
+<!--MAIN-->
+
+<div th:if="${showuser} != null">
+    <main>
+        <div class="container">
+            <h2 class="collection-title">Your books <small>Added from Lirary</small></h2>
+            <div class="collections">
+
+
+                <div  th:each="book, iterationStatus : ${bookList}" class="collection-item-outer">
+                    <div class="collection-item">
+
+                        <img th:src="@{'img/'+${book.id}}"/>
+
+
+                        <div class="collection-text">
+                            <h3>Java core</h3>
+                            <p>Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI. Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI.
+                            </p>
+
+                            <!--only ADMIN permission-->
+                            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
+                                <form class="admin-button" action="#" th:action="@{/adminaction}"  method="post">
+                                    <input type="hidden" name="bookId" th:value="${book.id}"/>
+                                    <input type="submit" name="action"  value="Edit"/>
+                                    <input type="submit" name="action"  value="Delete"/>
+                                </form>
+                            </div>
+                            <!--/only ADMIN permission-->
+
+                            <!--only ADMIN&SUBSCRIBER permission-->
+                            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN
+                                or showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).SUBSCRIBER}">
+                                <form class="admin-button" action="#" th:action="@{/shelfaction}"  method="post">
+                                    <input type="hidden" name="bookId" th:value="${book.id}"/>
+                                    <input type="submit" name="action"  value="Save to shelf"/>
+                                    <!--<input type="submit" name="action"  value="Delete from shelf"/>-->
+                                </form>
+                                <a th:href="@{'book/'+${book.id}}">Read more</a>
+                                <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>
+                            </div>
+                            <!--/only ADMIN&SUBSCRIBER permission-->
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<!--MAIN-->
+
+<!--FOOTER-->
+<footer class="footer">
+    <div class="container">
+        <p>Yaroslav Guschak, 2015</p>
+    </div>
+</footer>
+<!--/FOOTER-->
+</body>
+</html>

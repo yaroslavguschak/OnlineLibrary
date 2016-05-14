@@ -5,7 +5,7 @@ public class LoginRequest {
     private String password;
 
     public LoginRequest() {
-        this.login = "your nick";
+        this.login = "";
         this.password = "";
     }
 

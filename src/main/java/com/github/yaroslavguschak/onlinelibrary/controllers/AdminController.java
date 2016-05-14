@@ -1,6 +1,7 @@
 package com.github.yaroslavguschak.onlinelibrary.controllers;
 
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
+import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +24,9 @@ public class AdminController {
 
     @Autowired
     BookDAO bookDAO;
+
+    @Autowired
+    UserDAO userDAO;
 
     @RequestMapping(value = "/admin")
     public ModelAndView showNews(HttpServletRequest req) {
@@ -45,23 +48,31 @@ public class AdminController {
 
     @RequestMapping(value = "/adminaction" , method= RequestMethod.POST)
     public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long bookId = Long.valueOf(req.getParameter("bookId"));
-        String action       = req.getParameter("action");
-        Book book = bookDAO.getBookById(bookId);
+        HttpSession httpSession = req.getSession(true);
+        User user = (User)httpSession.getAttribute("user");
 
-        if ("Edit".equals(action)) {
-            System.out.print("LOG: " + "user sent book # " + bookId + "for editing");
-            BookRequest bookRequest = new BookRequest(book);
-            final ModelAndView mav = new ModelAndView("/editbook");
-            mav.addObject("bookRequest", bookRequest);
-            return mav;
-        }
+        if(user != null & user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin user. Do for security.
+            user = userDAO.getUserById(user.getId()); // check if another user with  ADMIN perm. del/edit some book(s)
+            httpSession.setAttribute("user", user); // put update user in session
+            Long   bookId = Long.valueOf(req.getParameter("bookId"));
+            String action = req.getParameter("action");
+            Book book = bookDAO.getBookById(bookId);
 
-        if ("Delete".equals(action)) {
-            System.out.println("==========LOG: " + "user sent book # " + bookId + "for deleting");
-//            Integer deleteCount = bookDAO.deleteBookById(bookId);
-            bookDAO.deleteBook(book);
+            if ("Edit".equals(action)) {
+                System.out.print("LOG: " + "user " + user.getLogin()+ " sent book # " + bookId + " " + book.getTitle() +  " for editing");
+                BookRequest bookRequest = new BookRequest(book);
+                final ModelAndView mav = new ModelAndView("/editbook");
+                mav.addObject("bookRequest", bookRequest);
+                return mav;
+            }
+
+            if ("Delete".equals(action)) {
+                System.out.println("LOG: " + "user " + user.getLogin()+ " delete # " + bookId + " " + book.getTitle() +  " for editing");
+                bookDAO.deleteBook(book);
+            }
+            return new ModelAndView("redirect:/admin");
+        } else {
+           return new ModelAndView("redirect:/admin");
         }
-        return new ModelAndView("redirect:/admin");
     }
 }

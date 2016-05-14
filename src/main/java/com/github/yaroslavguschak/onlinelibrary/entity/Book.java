@@ -4,8 +4,12 @@ import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import com.github.yaroslavguschak.onlinelibrary.util.PDFconverter;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.IOException;
 
+@XmlRootElement(name = "book")
 @Entity
 @Table(name = "book")
 @NamedQueries({ @NamedQuery(name = "Book.getBookById",    query = "SELECT b FROM Book b WHERE b.id = :bookid")})
@@ -24,6 +28,9 @@ public class Book {
     @Column(name = "title", length = 100)
     private String  title;
 
+    @Column(name = "annotation",columnDefinition="text")
+    private String annotation;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "genre")
     private Genre   genre;
@@ -40,19 +47,19 @@ public class Book {
     @Column(name = "booktext",columnDefinition="text")
     private String booktext;
 
-//    @Basic(fetch=FetchType.EAGER)
+
     @Column(name = "pdf")
     private byte[] pdf;
 
-//    @Basic(fetch=FetchType.EAGER)
+
     @Column(name = "img")
     private byte[] img;
-
 
 
     public Book() {
         this.author = "no_author";
         this.title  = "no_title";
+        this.annotation = "no_annotation";
         this.genre  = Genre.OTHER;
         this.year   = 0;
         this.city   = "no_city";
@@ -62,9 +69,10 @@ public class Book {
     }
 
 
-    public Book(String author, String title, Genre genre, int year, String city, String isbn, int pages, String booktext) {
+    public Book(String author, String title, String annotation, Genre genre, int year, String city, String isbn, int pages, String booktext) {
         this.author = author;
         this.title = title;
+        this.annotation = annotation;
         this.genre = genre;
         this.year = year;
         this.city = city;
@@ -81,6 +89,7 @@ public class Book {
     public Book updateFromRequest (BookRequest bookRequest){
         this.author = bookRequest.getAuthor();
         this.title = bookRequest.getTitle();
+        this.annotation = bookRequest.getAnnotation();
         this.genre = bookRequest.getGenre();
         this.year = bookRequest.getYear();
         this.city = bookRequest.getCity();
@@ -92,13 +101,24 @@ public class Book {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.img = bookRequest.getImg();
         return this;
+    }
+
+    public void pdfCreate(){
+        try {
+            this.pdf = PDFconverter.convertToPdfByte(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Long getId() {
         return id;
     }
 
+    @XmlTransient
     public void setId(Long id) {
         this.id = id;
     }
@@ -106,7 +126,7 @@ public class Book {
     public String getAuthor() {
         return author;
     }
-
+    @XmlElement
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -115,14 +135,25 @@ public class Book {
         return title;
     }
 
+    @XmlElement
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    @XmlElement
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
     }
 
     public Genre getGenre() {
         return genre;
     }
 
+    @XmlElement
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
@@ -131,6 +162,7 @@ public class Book {
         return year;
     }
 
+    @XmlElement
     public void setYear(int year) {
         this.year = year;
     }
@@ -139,6 +171,7 @@ public class Book {
         return city;
     }
 
+    @XmlElement
     public void setCity(String city) {
         this.city = city;
     }
@@ -147,6 +180,7 @@ public class Book {
         return isbn;
     }
 
+    @XmlElement
     public void setIsbn(String ISBN) {
         this.isbn = ISBN;
     }
@@ -155,6 +189,7 @@ public class Book {
         return pages;
     }
 
+    @XmlElement
     public void setPages(int pages) {
         this.pages = pages;
     }
@@ -163,14 +198,17 @@ public class Book {
         return booktext;
     }
 
+    @XmlElement
     public void setBooktext(String text) {
         this.booktext = text;
     }
+
 
     public byte[] getPdf() {
         return pdf;
     }
 
+    @XmlTransient
     public void setPdf(byte[] pdf) {
         this.pdf = pdf;
     }
@@ -179,9 +217,11 @@ public class Book {
         return img;
     }
 
+    @XmlTransient
     public void setImg(byte[] img) {
         this.img = img;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -216,15 +256,21 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "ISBN='" + isbn + '\'' +
-                ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", genre=" + genre +
-                ", year=" + year +
-                ", city='" + city + '\'' +
-                ", pages=" + pages +
-                ", booktext='" + booktext + '\'' +
-                '}';
+
+        int limitAnnotText = 50;
+        int limitBookText = 100;
+
+        return '\n' + "===== BOOK ID: " + id + " ======================================" + '\n' +
+                "   title:        " + title +  '\n'+
+                "   author:       " + author + '\n' +
+                "   genre:        " + genre + '\n' +
+                "   year:         " + year + '\n' +
+                "   city:         " + city + '\n' +
+                "   pages:         " + pages + '\n' +
+                "   annotation:   " + (annotation.codePointCount(0, annotation.length()) > limitAnnotText ?
+                                       annotation.substring(0, annotation.offsetByCodePoints(0, limitAnnotText)) : annotation) + '\n' +
+                "   booktext:     " + (booktext.codePointCount(0, booktext.length()) > limitBookText ?
+                                       booktext.substring(0, booktext.offsetByCodePoints(0, limitBookText)) : booktext) + '\n' +
+                "=======================================================";
     }
 }

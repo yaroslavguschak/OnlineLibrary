@@ -31,17 +31,17 @@ public class LoginController {
     @Autowired
     UserDAO userDAO;
 
-    @RequestMapping(value = "/login", method= RequestMethod.GET)
-    public ModelAndView loginGet() {
-        final ModelAndView mav = new ModelAndView("/login");
-        LoginRequest loginRequest = new LoginRequest();
-        mav.addObject("loginRequest",loginRequest);
-        return mav;
-    }
+    //    @RequestMapping(value = "/login", method= RequestMethod.GET)
+    //    public ModelAndView loginGet() {
+    //        final ModelAndView mav = new ModelAndView("/login");
+    //        LoginRequest loginRequest = new LoginRequest();
+    //        mav.addObject("loginRequest",loginRequest);
+    //        return mav;
+    //    }
 
     @RequestMapping(value = "/logout", method= RequestMethod.GET)
     public ModelAndView logOut(HttpServletRequest req, HttpServletResponse resp) {
-        final ModelAndView mav = new ModelAndView("/login");
+        final ModelAndView mav = new ModelAndView("redirect:/index");
         HttpSession httpSession = req.getSession(true);
         httpSession.invalidate();
         LoginRequest loginRequest = new LoginRequest();
@@ -52,27 +52,24 @@ public class LoginController {
 
     @RequestMapping(value = "/loginchek", method= RequestMethod.POST)
 //    @ResponseBody
-    public void loginCheck(@ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse resp)
+    public ModelAndView loginCheck(@ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException, GeneralSecurityException {
         String login = loginRequest.getLogin();
         String passwordhashFromRequest = CSHA1Util.getSHA1String(loginRequest.getPassword());
         User user = userDAO.getUserByLogin(login);
+        final ModelAndView mav = new ModelAndView("redirect:/index");
 
         if (passwordhashFromRequest.equals(user.getPasswordhash())){
             HttpSession httpSession = req.getSession(true);
             System.out.println("User logged successful: " + login + " in time" + httpSession.getCreationTime());
             httpSession.setAttribute("user", user);
-            RequestDispatcher requestDispatcher;
-            requestDispatcher = req.getRequestDispatcher("/user");
-            requestDispatcher.forward(req, resp);
-
+            mav.addObject(user);
         } else {
-            final ModelAndView mav = new ModelAndView("/login");
             mav.addObject("loginRequest",loginRequest);
             String error = "login/pass is incorrect!";
             mav.addObject("error",error);
         }
-
+    return mav;
     }
 
 

@@ -2,6 +2,7 @@ package com.github.yaroslavguschak.onlinelibrary.entity;
 
 
 public enum Genre {
+    NONE,
     COMEDY,
     DRAMA,
     NON_FICTION,

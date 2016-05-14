@@ -3,7 +3,9 @@ package com.github.yaroslavguschak.onlinelibrary.controllers;
 import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
+import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,90 +29,49 @@ public class ShelfController {
     @Autowired
     UserDAO userDAO;
 
-
     @RequestMapping(value = "/shelf")
     public ModelAndView showShelf(HttpServletRequest req, HttpServletResponse resp) {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
-        user = userDAO.getUserById(user.getId());
-
         final ModelAndView mav = new ModelAndView("/shelf");
 
-        System.out.println("****************WHAT IS IN A USER????**********************************");
-        System.out.println(user.getShelf().getBookList().size());
-        System.out.println("***********************************END**********************************");
-
         if (user != null){
+            user = userDAO.getUserById(user.getId());
             httpSession.setAttribute("bookList", user.getShelf().getBookList());
             mav.addObject("showuser",user);
-
-//            List<Book> articleList = user.getShelf().getBookList();
-//            httpSession.setAttribute("articleList", articleList);
-//            mav.addObject("articleList",articleList);
             return mav;
         } else  {
+
             return mav;
         }
     }
 
-
     @RequestMapping(value = "/shelfaction" , method= RequestMethod.POST)
-    public void archiveAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
-        user = userDAO.getUserById(user.getId());
 
-        List<Book> bookListFromView = (List<Book>) httpSession.getAttribute("bookList");
+        if(user != null & user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin/Subs user. Do for security.
+            user = userDAO.getUserById(user.getId()); // check if another user with  ADMIN perm. del/edit some book(s)
+            httpSession.setAttribute("user", user); // put update user in session
+            Long   bookId = Long.valueOf(req.getParameter("bookId"));
+            String action = req.getParameter("action");
+            Book book = bookDAO.getBookById(bookId);
 
-        if (req.getParameter("action").equals("SAVE")){
-            System.out.print("LOG: " + "saving items...");
-//            List<Book> bookList = (ArrayList<Book>)httpSession.getAttribute("bookList");
-//            List<Book> bookListTEMP = new ArrayList<Book>();
-
-            for (int i = 0; i < bookListFromView.size(); ++i ) {
-                if (req.getParameter(String.valueOf(i))!= null && req.getParameter(String.valueOf(i)).equals("save")){
-//                    bookListTEMP.add(bookList.get(i));
-                    user.getShelf().addBook(bookListFromView.get(i));
-                }
+            if ("Save to shelf".equals(action)) {
+                System.out.print("LOG: " + "user " + user.getLogin()+ " Save book # " + bookId + " " + book.getTitle() +  " to Shelf");
+                user.getShelf().addBook(book);
+                userDAO.updateUser(user);
             }
 
-//            bookDAO.addBooksToLibrary(bookListTEMP);
-            userDAO.updateUser(user);
-            System.out.println("LOG: " + "saving books to shelf... DONE!");
-            RequestDispatcher requestDispatcher;
-            requestDispatcher = req.getRequestDispatcher("/library");
-            requestDispatcher.forward(req, resp);
-        }
-
-        if (req.getParameter("action").equals("DELETE")){
-
-//            HttpSession httpSession = req.getSession(true);
-
-            System.out.println("===============");
-            System.out.println("************************************" + user.toString());
-
-
-            for (int i = 0; i < bookListFromView.size(); ++i ) {
-                if (req.getParameter(String.valueOf(i))!= null && req.getParameter(String.valueOf(i)).equals("delete")){
-                    user.getShelf().delFromShelf(bookListFromView.get(i));
-                }
-                System.out.println("<>" +  i  + " " + req.getParameter( String.valueOf(i) ));
+            if ("Delete from shelf".equals(action)) {
+                System.out.println("LOG: " + "user " + user.getLogin()+ " delete # " + bookId + " " + book.getTitle() +  " for editing");
+                user.getShelf().delFromShelf(book);
+                userDAO.updateUser(user);
             }
-
-
-            System.out.println("/-/-/*-/-/-/-/-/*-/-/-/*-/*-/" + user);
-            userDAO.updateUser(user);
-//            httpSession.setAttribute("user", user);
-            System.out.println("****************WHAT IS IN A SESSION????**********************************");
-            System.out.println(user.getShelf().getBookList().size());
-            System.out.println("***********************************END**********************************");
-
-
-            System.out.println("LOG: " + "deleting items... DONE!");
-//            userDAO.saveDefoltUser();
-            RequestDispatcher requestDispatcher;
-            requestDispatcher = req.getRequestDispatcher("/shelf");
-            requestDispatcher.forward(req, resp);
+            return new ModelAndView("redirect:/shelf");
+        } else {
+            return new ModelAndView("redirect:/shelf");
         }
     }
 }

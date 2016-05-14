@@ -86,12 +86,6 @@ public class BookDAO {
     }
 
 
-
-   /////// OK
-
-
-
-    /////// OK
     public void saveNewBook (Book book){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
