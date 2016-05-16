@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="../../../resources/css/style.css" th:href="@{/resources/css/style.css}" />
-    <link rel="stylesheet" href="../../../resources/css/normalize.css" th:href="@{/resources/css/normalize.css}" />
+    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
+    <!--<link rel="stylesheet" href="../../../resources/css/style.css" th:href="@{/resources/css/style.css}" />-->
+    <!--<link rel="stylesheet" href="../../../resources/css/normalize.css" th:href="@{/resources/css/normalize.css}" />-->
 </head>
     <body>
     <!--HEADER-->
@@ -13,32 +13,48 @@
             <h2>
                 <small> Best way to learn java online!</small>
             </h2>
+
         </div>
     </header>
-
     <!--/HEADER-->
 
-
     <!--NAVIGATION-->
-        <nav class="page-navigation" th:fragment="navigation">
-            <div class="container">
-                <ul>
-                    <li><a href="shelf">Shelf</a></li>
-                    <li><a href="library">Lirary</a></li>
-                    <li th:if="${showuser} == null"><a href="login" method="get">Login</a></li>
-                    <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a> <span th:text="${showuser.login} + ${showuser.permission}"></span></li>
-                </ul>
-                <!--LOGIN FORM-->
-                <div th:if="${showuser} != null">
-                    <form action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
-                            <input type="text" th:field="*{login}" required="required"/>
-                            <input type="password" th:field="*{password}" required="required"/>
-                            <input type="submit" value="Login"/>
-                    </form>
-                 </div>
-                <!--/LOGIN FORM-->
+    <nav class="page-navigation" th:fragment="navigation">
+        <div th:if="${showuser} != null">
+            <div class="user-info" th:text="${showuser.login} +' / ' + ${showuser.permission}"></div>
+        </div>
+        <div class="container">
+
+            <ul>
+                <li><a href="shelf">Shelf</a></li>
+                <li><a href="library">Lirary</a></li>
+                <li th:if="${showuser} == null"><a href="login" method="get">Login</a></li>
+                <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a></li>
+                <!--<li><div class="user-info" th:text="${showuser.login} + ' ' + ${showuser.permission}"></div></li>-->
+            </ul>
+            <!--LOGIN FORM-->
+            <div th:if="${showuser} == null">
+                <form class="login" action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
+                    <input type="text" th:field="*{login}" required="required" autofocus="true"/>
+                    <input type="password" th:field="*{password}" required="required"/>
+                    <input type="submit" value="Login"/>
+                </form>
             </div>
-        </nav>
+            <div th:if="${showuser} != null">
+                <form class="login" action="#" th:action="@{/search}"  method="get">
+                    <select  name="genre" >
+                        <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}" th:value="${state}" th:text="${state}"></option>
+                    </select>
+                    <input type="text" name="search" placeholder="Author or title..." autofocus="true"/>
+
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+
+            <!--/LOGIN FORM-->
+        </div>
+    </nav>
     <!--/NAVIGATION-->
+
     </body>
 </html>

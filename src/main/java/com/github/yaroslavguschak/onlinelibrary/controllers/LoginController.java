@@ -57,7 +57,15 @@ public class LoginController {
         String login = loginRequest.getLogin();
         String passwordhashFromRequest = CSHA1Util.getSHA1String(loginRequest.getPassword());
         User user = userDAO.getUserByLogin(login);
-        final ModelAndView mav = new ModelAndView("redirect:/index");
+        String referrerURI = req.getHeader("referer");
+        if (referrerURI != null){
+            int lastIndex =referrerURI.indexOf('/', referrerURI.indexOf("//") + 1) ;
+            referrerURI = referrerURI.substring(lastIndex);
+        } else {
+            referrerURI = "index";
+        }
+        final ModelAndView mav = new ModelAndView("redirect:/" + referrerURI);
+
 
         if (passwordhashFromRequest.equals(user.getPasswordhash())){
             HttpSession httpSession = req.getSession(true);

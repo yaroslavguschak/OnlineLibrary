@@ -6,6 +6,7 @@ import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class ShelfController {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
         final ModelAndView mav = new ModelAndView("/shelf");
+        mav.addObject("loginRequest",new LoginRequest());
 
         if (user != null){
             user = userDAO.getUserById(user.getId());
@@ -41,12 +43,13 @@ public class ShelfController {
             mav.addObject("showuser",user);
             return mav;
         } else  {
-
+            String error = "Please, login, and use personal shelf and other features!";
+            mav.addObject(error);
             return mav;
         }
     }
 
-    @RequestMapping(value = "/shelfaction" , method= RequestMethod.POST)
+    @RequestMapping(value = "/shelfaction" , method = RequestMethod.POST)
     public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
