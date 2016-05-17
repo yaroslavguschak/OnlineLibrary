@@ -62,10 +62,13 @@ public class LibraryController {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
         final ModelAndView mav = new ModelAndView("/index");
-        mav.addObject("showuser", user);
-        mav.addObject("loginRequest",new LoginRequest()); // спочатку перевірка, чи є в сесії користувач; якщо не має, кладеться реквест, якщо є - користувач
-        mav.addObject("bookList", bookDAO.getAllBooks());
 
+        if (user != null) {
+            mav.addObject("showuser", user);
+            mav.addObject("bookList", bookDAO.getAllBooks());
+        } else {
+            mav.addObject("loginRequest", new LoginRequest());
+        }
         return mav;
     }
 

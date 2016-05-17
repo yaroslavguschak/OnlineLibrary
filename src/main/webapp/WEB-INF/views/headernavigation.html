@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
-    <!--<link rel="stylesheet" href="../../../resources/css/style.css" th:href="@{/resources/css/style.css}" />-->
-    <!--<link rel="stylesheet" href="../../../resources/css/normalize.css" th:href="@{/resources/css/normalize.css}" />-->
 </head>
     <body>
     <!--HEADER-->
@@ -20,14 +17,16 @@
 
     <!--NAVIGATION-->
     <nav class="page-navigation" th:fragment="navigation">
+
         <div th:if="${showuser} != null">
             <div class="user-info" th:text="${showuser.login} +' / ' + ${showuser.permission}"></div>
         </div>
+
         <div class="container">
 
             <ul>
+                <li><a href="index">Lirary</a></li>
                 <li><a href="shelf">Shelf</a></li>
-                <li><a href="library">Lirary</a></li>
                 <li th:if="${showuser} == null"><a href="login" method="get">Login</a></li>
                 <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a></li>
                 <!--<li><div class="user-info" th:text="${showuser.login} + ' ' + ${showuser.permission}"></div></li>-->

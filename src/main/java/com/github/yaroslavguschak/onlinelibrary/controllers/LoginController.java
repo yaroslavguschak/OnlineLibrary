@@ -6,6 +6,7 @@ import com.github.yaroslavguschak.onlinelibrary.dao.UserDAO;
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
+import com.github.yaroslavguschak.onlinelibrary.util.UriReferrerCutter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,7 +42,9 @@ public class LoginController {
 
     @RequestMapping(value = "/logout", method= RequestMethod.GET)
     public ModelAndView logOut(HttpServletRequest req, HttpServletResponse resp) {
-        final ModelAndView mav = new ModelAndView("redirect:/index");
+        String referrerURI = req.getHeader("referer");
+        final ModelAndView mav = new ModelAndView("redirect:/" + UriReferrerCutter.cutReferre(referrerURI));
+
         HttpSession httpSession = req.getSession(true);
         httpSession.invalidate();
         LoginRequest loginRequest = new LoginRequest();
@@ -51,20 +54,14 @@ public class LoginController {
 
 
     @RequestMapping(value = "/loginchek", method= RequestMethod.POST)
-//    @ResponseBody
     public ModelAndView loginCheck(@ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException, GeneralSecurityException {
         String login = loginRequest.getLogin();
         String passwordhashFromRequest = CSHA1Util.getSHA1String(loginRequest.getPassword());
         User user = userDAO.getUserByLogin(login);
+
         String referrerURI = req.getHeader("referer");
-        if (referrerURI != null){
-            int lastIndex =referrerURI.indexOf('/', referrerURI.indexOf("//") + 1) ;
-            referrerURI = referrerURI.substring(lastIndex);
-        } else {
-            referrerURI = "index";
-        }
-        final ModelAndView mav = new ModelAndView("redirect:/" + referrerURI);
+        final ModelAndView mav = new ModelAndView("redirect:/" + UriReferrerCutter.cutReferre(referrerURI));
 
 
         if (passwordhashFromRequest.equals(user.getPasswordhash())){

@@ -138,6 +138,7 @@ public class PDFconverter {
 
             book.setPages(pageCount);
             doc.save(fileName);
+            doc.close();
         }
         catch(IOException  e){
             System.out.println(e.getMessage());
