@@ -35,16 +35,14 @@ public class ShelfController {
         HttpSession httpSession = req.getSession(true);
         User user = (User)httpSession.getAttribute("user");
         final ModelAndView mav = new ModelAndView("/shelf");
-        mav.addObject("loginRequest",new LoginRequest());
 
         if (user != null){
             user = userDAO.getUserById(user.getId());
-            httpSession.setAttribute("bookList", user.getShelf().getBookList());
+            mav.addObject("bookList", user.getShelf().getBookList());
             mav.addObject("showuser",user);
             return mav;
         } else  {
-            String error = "Please, login, and use personal shelf and other features!";
-            mav.addObject(error);
+            mav.addObject("loginRequest",new LoginRequest());
             return mav;
         }
     }

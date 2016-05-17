@@ -27,7 +27,7 @@
             <ul>
                 <li><a href="index">Lirary</a></li>
                 <li><a href="shelf">Shelf</a></li>
-                <li th:if="${showuser} == null"><a href="login" method="get">Login</a></li>
+                <li th:if="${showuser} == null"><a href="register" method="get">Register</a></li>
                 <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a></li>
                 <!--<li><div class="user-info" th:text="${showuser.login} + ' ' + ${showuser.permission}"></div></li>-->
             </ul>
