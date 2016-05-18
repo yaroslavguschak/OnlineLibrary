@@ -45,8 +45,11 @@
                                 or showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).SUBSCRIBER}">
                                     <form class="admin-button" action="#" th:action="@{/shelfaction}"  method="post">
                                         <input type="hidden" name="bookId" th:value="${book.id}"/>
-                                        <input type="submit" name="action"  value="Save to shelf"/>
-                                        <!--<input type="submit" name="action"  value="Delete from shelf"/>-->
+
+                                        <div th:switch="${showuser.getShelf().getBookList().contains(book)}">
+                                            <input th:case="${false}" type="submit" name="action"  value="Save to shelf"/>
+                                            <input th:case="${true}" type="submit" name="action"  value="Delete from shelf"/>
+                                        </div>
                                     </form>
                                     <a th:href="@{'book/'+${book.id}}">Read more</a>
                                     <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>

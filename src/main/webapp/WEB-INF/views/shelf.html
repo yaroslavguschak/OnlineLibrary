@@ -19,7 +19,7 @@
             <div th:if="${showuser} == null"><p>Please, login, and use personal shelf and other features!</p></div>
             <div th:if="${showuser} != null">
                 <div class="collections">
-                    <div  th:each="book, iterationStatus : ${bookList}" class="collection-item-outer">
+                    <div  th:each="book, iterationStatus : ${showuser.getShelf().getBookList()}" class="collection-item-outer">
                         <div class="collection-item">
 
                             <img th:src="@{'img/'+${book.id}}"/>

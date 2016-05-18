@@ -7,6 +7,7 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
+import com.github.yaroslavguschak.onlinelibrary.util.UriReferrerCutter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,6 @@ public class ShelfController {
 
         if (user != null){
             user = userDAO.getUserById(user.getId());
-            mav.addObject("bookList", user.getShelf().getBookList());
             mav.addObject("showuser",user);
             return mav;
         } else  {
@@ -70,7 +70,9 @@ public class ShelfController {
                 user.getShelf().delFromShelf(book);
                 userDAO.updateUser(user);
             }
-            return new ModelAndView("redirect:/shelf");
+            String referrerURI = req.getHeader("referer");
+            return new ModelAndView("redirect:/" + UriReferrerCutter.cutReferre(referrerURI));
+
         } else {
             return new ModelAndView("redirect:/shelf");
         }
