@@ -29,7 +29,6 @@
                 <li><a href="shelf">Shelf</a></li>
                 <li th:if="${showuser} == null"><a href="register" method="get">Register</a></li>
                 <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a></li>
-                <!--<li><div class="user-info" th:text="${showuser.login} + ' ' + ${showuser.permission}"></div></li>-->
             </ul>
             <!--LOGIN FORM-->
             <div th:if="${showuser} == null">
@@ -54,6 +53,7 @@
         </div>
     </nav>
     <!--/NAVIGATION-->
+
 
     </body>
 </html>

@@ -10,7 +10,9 @@ import java.security.GeneralSecurityException;
 
 @Entity
 @Table(name = "libuser")
-@NamedQueries({ @NamedQuery(name = "User.getUserByLogin", query = "SELECT u FROM User u where u.login = :userl")})
+@NamedQueries({ @NamedQuery(name = "User.getUserByLogin",  query = "SELECT u FROM User u where u.login = :userl"),
+                @NamedQuery(name = "User.getCountByLogin", query = "SELECT COUNT(u) FROM User u where u.login = :userl")})
+
 public class User {
 
     @Id

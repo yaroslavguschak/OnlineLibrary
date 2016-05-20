@@ -37,11 +37,19 @@ public class ShelfController {
         User user = (User)httpSession.getAttribute("user");
         final ModelAndView mav = new ModelAndView("/shelf");
 
+
+
         if (user != null){
             user = userDAO.getUserById(user.getId());
             mav.addObject("showuser",user);
             return mav;
         } else  {
+            String message;
+            if(httpSession.getAttribute("message") != null) {
+                message = httpSession.getAttribute("message").toString();
+                httpSession.removeAttribute("message");
+                mav.addObject("message", message);
+            }
             mav.addObject("loginRequest",new LoginRequest());
             return mav;
         }

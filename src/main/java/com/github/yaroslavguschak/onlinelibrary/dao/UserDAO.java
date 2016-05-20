@@ -34,6 +34,22 @@ public class UserDAO {
         }
     }
 
+    private int getUserCountByLogin(EntityManager entityManager, String userLogin) {
+        return (entityManager.createNamedQuery("User.getCountByLogin", Long.class).setParameter("userl", userLogin))
+                .getSingleResult().intValue();
+    }
+
+    public boolean checkUserLogin(String userLogin) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        boolean ifExist = getUserCountByLogin(entityManager, userLogin) > 0;
+        entityManager.close();
+        return ifExist;
+    }
+
+
+
+
+
     public User getUserByLogin(String userLogin) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
