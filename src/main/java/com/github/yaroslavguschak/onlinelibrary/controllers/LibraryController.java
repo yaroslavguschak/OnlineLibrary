@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,8 @@ public class LibraryController {
     @Autowired
     BookDAO bookDAO;
 
+//    @Inject
+//    User user;
 
 
     @RequestMapping(value = "/library")

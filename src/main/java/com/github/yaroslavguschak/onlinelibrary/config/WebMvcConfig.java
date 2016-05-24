@@ -18,9 +18,6 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 
 @Configuration
 @ComponentScan(basePackageClasses = Application.class)

@@ -2,6 +2,9 @@ package com.github.yaroslavguschak.onlinelibrary.entity;
 
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.RegisterRequest;
 import com.github.yaroslavguschak.onlinelibrary.util.CSHA1Util;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
@@ -12,7 +15,8 @@ import java.security.GeneralSecurityException;
 @Table(name = "libuser")
 @NamedQueries({ @NamedQuery(name = "User.getUserByLogin",  query = "SELECT u FROM User u where u.login = :userl"),
                 @NamedQuery(name = "User.getCountByLogin", query = "SELECT COUNT(u) FROM User u where u.login = :userl")})
-
+//@Component
+//@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class User {
 
     @Id
