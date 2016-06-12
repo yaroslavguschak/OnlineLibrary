@@ -12,7 +12,13 @@ import java.io.IOException;
 @XmlRootElement(name = "book")
 @Entity
 @Table(name = "book")
-@NamedQueries({ @NamedQuery(name = "Book.getBookById",    query = "SELECT b FROM Book b WHERE b.id = :bookid")})
+@NamedQueries({ @NamedQuery(name = "Book.getBookById",    query = "SELECT b FROM Book b WHERE b.id = :bookid"),
+                @NamedQuery(name = "Book.searchBookByTitleAndAuthor",
+                        query = "SELECT b FROM Book b WHERE lower (b.title)  LIKE lower(:search) " +
+                                                        "OR lower (b.author) LIKE lower(:search)"),
+                @NamedQuery(name = "Book.searchBookByTitleAndAuthorAndGenre",
+                        query = "SELECT b FROM Book b WHERE ( lower (b.title)  LIKE lower(:search) " +
+                                "OR lower (b.author) LIKE lower(:search) ) AND b.genre = :genre")})
 public class Book {
 
     @Id

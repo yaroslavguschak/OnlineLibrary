@@ -1,13 +1,17 @@
 package com.github.yaroslavguschak.onlinelibrary.dao;
 
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
+import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
+import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 @Component
@@ -30,6 +34,39 @@ public class BookDAO {
         }
     }
 
+    private List <Book> searchBooksByTitleAndAuthor(SearchRequest searchRequest, EntityManager entityManager){
+        try {
+            List <Book> bookList = entityManager.createNamedQuery("Book.searchBookByTitleAndAuthor", Book.class)
+                    .setParameter("search", "%" +  searchRequest.getSearchTextInput() + "%").getResultList();
+            return bookList;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    private List <Book> searchBooksByTitleAndAuthorAndGenre(SearchRequest searchRequest, EntityManager entityManager){
+        try {
+            List <Book> bookList = entityManager.createNamedQuery("Book.searchBookByTitleAndAuthorAndGenre", Book.class)
+                    .setParameter("search", "%" +  searchRequest.getSearchTextInput() + "%").
+                            setParameter("genre", searchRequest.getGenre()).getResultList();
+            return bookList;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public List <Book> searchBooks(SearchRequest searchRequest){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        if (searchRequest.getGenre() == Genre.NONE){
+            return searchBooksByTitleAndAuthor(searchRequest,entityManager);
+        } else {
+            return searchBooksByTitleAndAuthorAndGenre(searchRequest,entityManager);
+        }
+    }
+
+
+
+
     public Integer deleteBookById(Long bookId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -41,7 +78,7 @@ public class BookDAO {
         }
     }
 
-    public void deleteBook(Book book) {
+    public void deleteBook(Book book) throws GeneralSecurityException {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         List <User> allBookOwnerList = userDAO.getAllBookOwner(book);
         System.out.println("======///USERS FOR DEL BOOK///=========");

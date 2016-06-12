@@ -6,17 +6,22 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
+import com.github.yaroslavguschak.onlinelibrary.util.Alert;
+import com.github.yaroslavguschak.onlinelibrary.util.UriReferrerCutter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.text.DateFormat;
 import java.util.List;
 
 @Controller
@@ -27,33 +32,44 @@ public class AdminController {
 
     @Autowired
     UserDAO userDAO;
+    @Inject
+    User user;
 
-    @RequestMapping(value = "/admin")
-    public ModelAndView showNews(HttpServletRequest req) {
-        final ModelAndView mav = new ModelAndView("/admin");
-        HttpSession httpSession = req.getSession(true);
-        User user = (User)httpSession.getAttribute("user");
+    @Inject
+    Alert alert;
 
-        if (user != null && user.getPermission().equals(Permission.ADMIN)){
-            List<Book> allBooksInLibrary = bookDAO.getAllBooks();
-            mav.addObject("showuser", user);
-            mav.addObject("bookList", allBooksInLibrary);
-            return mav;
-        } else  {
-            mav.addObject("showuser", user);
-            return mav;
-        }
-    }
+    @Autowired
+    DateFormat dateFormat;
+
+//    @RequestMapping(value = "/admin")
+//    public ModelAndView showNews(HttpServletRequest req) {
+//        final ModelAndView mav = new ModelAndView("/admin");
+//        HttpSession httpSession = req.getSession(true);
+//        User user = (User)httpSession.getAttribute("user");
+//
+//        if (user != null && user.getPermission().equals(Permission.ADMIN)){
+//            List<Book> allBooksInLibrary = bookDAO.getAllBooks();
+//            mav.addObject("showuser", user);
+//            mav.addObject("bookList", allBooksInLibrary);
+//            return mav;
+//        } else  {
+//            mav.addObject("showuser", user);
+//            return mav;
+//        }
+//    }
 
 
     @RequestMapping(value = "/adminaction" , method= RequestMethod.POST)
-    public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession httpSession = req.getSession(true);
-        User user = (User)httpSession.getAttribute("user");
+    public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, GeneralSecurityException {
+//        HttpSession httpSession = req.getSession(true);
+//        User user = (User)httpSession.getAttribute("user");
 
-        if(user != null & user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin user. Do for security.
-            user = userDAO.getUserById(user.getId()); // check if another user with  ADMIN perm. del/edit some book(s)
-            httpSession.setAttribute("user", user); // put update user in session
+        String referrerURI = req.getHeader("referer");
+        referrerURI = UriReferrerCutter.cutReferre(referrerURI);
+
+        if( user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin user. Do for security.
+//            user = userDAO.getUserById(user.getId()); // check if another user with  ADMIN perm. del/edit some book(s)
+//            httpSession.setAttribute("user", user); // put update user in session
             Long   bookId = Long.valueOf(req.getParameter("bookId"));
             String action = req.getParameter("action");
             Book book = bookDAO.getBookById(bookId);
@@ -68,11 +84,10 @@ public class AdminController {
 
             if ("Delete".equals(action)) {
                 System.out.println("LOG: " + "user " + user.getLogin()+ " delete # " + bookId + " " + book.getTitle() +  " for editing");
+                user.getShelf().delFromShelf(book);
                 bookDAO.deleteBook(book);
             }
-            return new ModelAndView("redirect:/admin");
-        } else {
-           return new ModelAndView("redirect:/admin");
         }
+     return new ModelAndView("redirect:/" + referrerURI);
     }
 }

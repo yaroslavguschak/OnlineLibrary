@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.DateFormat;
+import java.util.Date;
 
 
 @Controller
@@ -32,9 +34,45 @@ public class LoginController {
 
     @Autowired
     UserDAO userDAO;
-//
-//    @Inject
-//    User user;
+
+    @Inject
+    User user;
+
+    @Inject
+    Alert alert;
+
+    @Autowired
+    DateFormat dateFormat;
+
+    @RequestMapping(value = "/loginchek", method = RequestMethod.POST)
+    public ModelAndView loginCheck(@ModelAttribute("loginRequest") LoginRequest loginRequest,
+                                   HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, GeneralSecurityException {
+        String referrerURI = req.getHeader("referer");
+        referrerURI = UriReferrerCutter.cutReferre(referrerURI);
+
+        String login = loginRequest.getLogin();
+
+        if (userDAO.checkUserLogin(login)){
+            String passwordhashFromRequest = CSHA1Util.getSHA1String(loginRequest.getPassword());
+
+
+            if (passwordhashFromRequest.equals(userDAO.getPassHashByLogin(login))){
+                System.out.println("User logged successful: " + login + " in time " + dateFormat.format(new Date()));
+                user.copyAllFields(userDAO.getUserByLogin(login));
+                System.out.println(user.toString());
+            } else {
+                alert.setMessage("pass for login [" + login + "]  is incorrect");
+                alert.setShow(true);
+//                req.getSession(true).invalidate();
+            }
+        } else {
+            alert.setMessage("User with login [" + login + "] not exist");
+            alert.setShow(true);
+        }
+        return new ModelAndView("redirect:/" + referrerURI );
+    }
+
 
     @RequestMapping(value = "/logout", method= RequestMethod.GET)
     public ModelAndView logOut(HttpServletRequest req, HttpServletResponse resp) {
@@ -49,32 +87,6 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/loginchek", method= RequestMethod.POST)
-    public ModelAndView loginCheck(@ModelAttribute("loginRequest") LoginRequest loginRequest, HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException, GeneralSecurityException {
-        String referrerURI = req.getHeader("referer");
-        String login = loginRequest.getLogin();
-        HttpSession httpSession = req.getSession(true);
-
-        if (userDAO.checkUserLogin(login)){
-            httpSession.setAttribute("message", "User with login " + login + "not exist");
-
-        }
-        else {
-
-        }
-        String passwordhashFromRequest = CSHA1Util.getSHA1String(loginRequest.getPassword());
-        User user = userDAO.getUserByLogin(login);
-
-
-
-        if (passwordhashFromRequest.equals(user.getPasswordhash())){
-            System.out.println("User logged successful: " + login + " in time" + httpSession.getCreationTime());
-            httpSession.setAttribute("user", user);
-        } else {
-        }
-        return new ModelAndView("redirect:/" + UriReferrerCutter.cutReferre(referrerURI));
-    }
 
 
 

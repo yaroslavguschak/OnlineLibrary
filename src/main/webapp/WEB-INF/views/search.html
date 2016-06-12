@@ -15,7 +15,10 @@
 
         <main>
             <div class="container">
-                <h2 class="collection-title">Library <small>All available books </small></h2>
+                <h2 class="collection-title">Search <small>
+                    <p th:text="${matchesCount}">Matches</p>
+                </small></h2>
+
                 <div th:if="${showuser.permission != T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
                 <div class="collections">
 
@@ -27,10 +30,8 @@
 
 
                             <div class="collection-text">
-                                <h3 th:text="${book.title}">Title</h3>
-
-                                    <h3><small><span th:text="${book.author}"/></small></h3>
-                                                                <p th:text="${book.annotation}">Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI. Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI.
+                                <h3>Java core</h3>
+                                <p>Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI. Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI.
                                 </p>
 
                                 <!--only ADMIN permission-->

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 @Component
@@ -39,6 +40,12 @@ public class UserDAO {
                 .getSingleResult().intValue();
     }
 
+    public String getPassHashByLogin(String userLogin) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        return (entityManager.createNamedQuery("User.getPassHashByLogin", String.class).setParameter("userl", userLogin))
+                .getSingleResult();
+    }
+
     public boolean checkUserLogin(String userLogin) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         boolean ifExist = getUserCountByLogin(entityManager, userLogin) > 0;
@@ -61,10 +68,12 @@ public class UserDAO {
         }
     }
 
-    public void updateUser (User user){
+    public void updateUser (User user) throws GeneralSecurityException {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.merge(user);
+        User tempUser = new User();
+        tempUser.copyAllFields(user);
+        entityManager.merge(tempUser);
         entityManager.getTransaction().commit();
         entityManager.close();
         System.out.println("LOG / User updated in  DB" + user.toString());

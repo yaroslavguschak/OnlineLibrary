@@ -7,6 +7,8 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.SearchRequest;
+import com.github.yaroslavguschak.onlinelibrary.util.Alert;
 import com.github.yaroslavguschak.onlinelibrary.util.UriReferrerCutter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.text.DateFormat;
 import java.util.List;
 
 @Controller
@@ -31,38 +36,41 @@ public class ShelfController {
     @Autowired
     UserDAO userDAO;
 
+    @Inject
+    User user;
+
+    @Inject
+    Alert alert;
+
+    @Autowired
+    DateFormat dateFormat;
+
+
     @RequestMapping(value = "/shelf")
     public ModelAndView showShelf(HttpServletRequest req, HttpServletResponse resp) {
-        HttpSession httpSession = req.getSession(true);
-        User user = (User)httpSession.getAttribute("user");
         final ModelAndView mav = new ModelAndView("/shelf");
-
-
-
-        if (user != null){
-            user = userDAO.getUserById(user.getId());
-            mav.addObject("showuser",user);
-            return mav;
-        } else  {
-            String message;
-            if(httpSession.getAttribute("message") != null) {
-                message = httpSession.getAttribute("message").toString();
-                httpSession.removeAttribute("message");
-                mav.addObject("message", message);
-            }
-            mav.addObject("loginRequest",new LoginRequest());
-            return mav;
+        mav.addObject("showuser", user);
+        if (alert.getIsShow()){
+            mav.addObject("message", alert.getMessage());
+            alert.setShow(false);
         }
+        if (user.getPermission() != Permission.GUEST) {
+            mav.addObject("bookList", bookDAO.getAllBooks());
+            mav.addObject("searchRequest", new SearchRequest());
+        } else {
+            mav.addObject("loginRequest", new LoginRequest());
+        }
+        return mav;
     }
 
     @RequestMapping(value = "/shelfaction" , method = RequestMethod.POST)
-    public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession httpSession = req.getSession(true);
-        User user = (User)httpSession.getAttribute("user");
+    public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, GeneralSecurityException {
+//        HttpSession httpSession = req.getSession(true);
+//        User user = (User)httpSession.getAttribute("user");
 
-        if(user != null & user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin/Subs user. Do for security.
-            user = userDAO.getUserById(user.getId()); // check if another user with  ADMIN perm. del/edit some book(s)
-            httpSession.setAttribute("user", user); // put update user in session
+        if(user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin/Subs user. Do for security.
+            user.copyAllFields(userDAO.getUserById(user.getId())); // check if another user with  ADMIN perm. del/edit some book(s) during the session
+//            httpSession.setAttribute("user", user); // put update user in session
             Long   bookId = Long.valueOf(req.getParameter("bookId"));
             String action = req.getParameter("action");
             Book book = bookDAO.getBookById(bookId);

@@ -18,6 +18,8 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Configuration
 @ComponentScan(basePackageClasses = Application.class)
@@ -76,6 +78,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         return thymeleafViewResolver;
     }
 
+    @Bean
+    public DateFormat dateFormat (){
+        return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    }
+
 
 
     @Override
@@ -87,6 +94,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
+
+
 
     /**
      * Handles favicon.ico requests assuring no <code>404 Not Found</code> error is returned.

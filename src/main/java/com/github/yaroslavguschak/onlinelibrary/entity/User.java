@@ -13,10 +13,11 @@ import java.security.GeneralSecurityException;
 
 @Entity
 @Table(name = "libuser")
-@NamedQueries({ @NamedQuery(name = "User.getUserByLogin",  query = "SELECT u FROM User u where u.login = :userl"),
-                @NamedQuery(name = "User.getCountByLogin", query = "SELECT COUNT(u) FROM User u where u.login = :userl")})
-//@Component
-//@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@NamedQueries({ @NamedQuery(name = "User.getUserByLogin",     query = "SELECT u FROM User u where u.login = :userl"),
+                @NamedQuery(name = "User.getCountByLogin",    query = "SELECT COUNT(u) FROM User u where u.login = :userl"),
+                @NamedQuery(name = "User.getPassHashByLogin", query = "SELECT u.passwordhash FROM User u where u.login = :userl")})
+@Component
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class User {
 
     @Id
@@ -51,11 +52,11 @@ public class User {
 
 
     public User() {
-        this.login = "0nickname";
-        this.firstName = "0first name";
-        this.lastName  = "0last name";
-        this.email     = "0email";
-        this.passwordhash = "notgen";
+        this.login = "Anonymous";
+        this.firstName = "Anonymous";
+        this.lastName  = "Anonymous";
+        this.email     = "Anonymous";
+        this.passwordhash = "Anonymous";
         this.permission = Permission.GUEST;
         this.shelf = new Shelf();
     }
@@ -68,6 +69,17 @@ public class User {
         this.passwordhash = CSHA1Util.getSHA1String(password);
         this.permission = permission;
         this.shelf = new Shelf();
+    }
+
+    public void copyAllFields (User user) throws GeneralSecurityException {
+        this.id = user.getId();
+        this.login = user.getLogin();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.passwordhash = user.getPasswordhash();
+        this.permission = user.getPermission();
+        this.shelf = user.getShelf();
     }
 
     public User(RegisterRequest registerRequest) throws GeneralSecurityException {
@@ -155,14 +167,14 @@ public class User {
 
     @Override
     public String toString() {
-        return '\n' + "===== USER ID: " + id + " ======================================" + '\n' +
-                "   login:        " + login +  '\n'+
-                "   firstName:    " + firstName + '\n' +
-                "   lastName:     " + lastName + '\n' +
-                "   email:        " + email + '\n' +
-                "   permission:   " + permission + '\n' +
-                "   passwordhash: " + passwordhash + '\n' +
-                "=======================================================";
+        return '\n'  +  "===== USER ID: " + id + " ======================================" + '\n' +
+                        "   login:        " + login +  '\n'+
+                        "   firstName:    " + firstName + '\n' +
+                        "   lastName:     " + lastName + '\n' +
+                        "   email:        " + email + '\n' +
+                        "   permission:   " + permission + '\n' +
+                        "   passwordhash: " + passwordhash + '\n' +
+                        "=======================================================";
     }
 }
 

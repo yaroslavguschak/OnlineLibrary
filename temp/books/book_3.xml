@@ -1,1 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><book><annotation>lalalalalaa</annotation><author>Jack London</author><booktext>Story about White Fang</booktext><city>New York</city><genre>REALISTIC_FICTION</genre><isbn>978-185-813-634</isbn><pages>298</pages><title>White Fang</title><year>1906</year></book>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<book>
+	<title>White Fang</title>
+	<annotation>
+		White Fang is a novel by American author Jack London (1876–1916) — and the name of the book's eponymous character, a wild wolfdog. First serialized in Outing magazine, it was published in 1906. The story takes place in Yukon Territory, Canada, during the 1890s Klondike Gold Rush and details White Fang's journey to domestication. It is a companion novel (and a thematic mirror) to London's best-known work, The Call of the Wild, which is about a kidnapped, domesticated dog embracing his wild ancestry to survive and thrive in the wild.
+	</annotation>
+	<author>Jack London</author>
+	<city>New York</city>
+	<genre>REALISTIC_FICTION</genre>
+	<isbn>978-185-813-634</isbn>
+	<pages>298</pages>
+	<year>1906</year>
+	<booktext>
+		dfdf
+	</booktext>
+</book>

@@ -18,36 +18,50 @@
     <!--NAVIGATION-->
     <nav class="page-navigation" th:fragment="navigation">
 
-        <div th:if="${showuser} != null">
-            <div class="user-info" th:text="${showuser.login} +' / ' + ${showuser.permission}"></div>
-        </div>
+        <p class="user-info" th:text="${showuser.login} +' / ' + ${showuser.permission}"></p>
+        <p th:if="${message} != null" class="message" th:text="${message}"></p>
 
         <div class="container">
-
+            <!--MENU-->
             <ul>
                 <li><a href="index">Lirary</a></li>
                 <li><a href="shelf">Shelf</a></li>
-                <li th:if="${showuser} == null"><a href="register" method="get">Register</a></li>
-                <li th:if="${showuser} != null"><a href="logout" method="post">Logout</a></li>
+                <li th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
+                    <a href="register" method="get">Register</a>
+                </li>
+                <li th:if="${showuser.permission != T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
+                    <a href="logout" method="post">Logout</a>
+                </li>
             </ul>
+            <!--/MENU-->
+
             <!--LOGIN FORM-->
-            <div th:if="${showuser} == null">
+            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
                 <form class="login" action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
                     <input type="text" th:field="*{login}" required="required" autofocus="true"/>
                     <input type="password" th:field="*{password}" required="required"/>
                     <input type="submit" value="Login"/>
                 </form>
             </div>
-            <div th:if="${showuser} != null">
-                <form class="login" action="#" th:action="@{/search}"  method="get">
-                    <select  name="genre" >
-                        <option th:each="state : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}" th:value="${state}" th:text="${state}"></option>
-                    </select>
-                    <input type="text" name="search" placeholder="Author or title..." autofocus="true"/>
+            <!--/LOGIN FORM-->
 
+            <!--SEARCH FORM-->
+            <div th:if="${showuser.permission != T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
+                <form class="login" action="#" th:action="@{/search}" th:object="${searchRequest}" method="get">
+                    <select  name="genre" >
+
+                        <option th:each="genreItem : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}"
+                                th:value="${genreItem}"
+                                th:text="${genreItem.displayGenre}"
+
+                                >
+                        </option>
+                    </select>
+                    <input type="text" th:field="*{searchTextInput}" required="required" autofocus="true"/>
                     <input type="submit" value="Search"/>
                 </form>
             </div>
+            <!--SEARCH FORM-->
 
             <!--/LOGIN FORM-->
         </div>
