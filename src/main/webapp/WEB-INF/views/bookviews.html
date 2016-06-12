@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+    <body>
+
+    <!--BOOK ITEM-->
+    <div class="collection-item" th:fragment="bookitem">
+        <img th:src="@{'img/'+${book.id}}"/>
+
+
+        <div class="collection-text">
+            <h3 th:text="${book.title}">Title</h3>
+            <h3>
+                <small><span th:text="${book.author}"/>Author</small>
+            </h3>
+            <p th:text="${book.annotation}">Annotation</p>
+
+            <!--only ADMIN permission-->
+            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
+                <form class="admin-button" action="#" th:action="@{/adminaction}"  method="post">
+                    <input type="hidden" name="bookId" th:value="${book.id}"/>
+                    <input type="submit" name="action"  value="Edit"/>
+                    <input type="submit" name="action"  value="Delete"/>
+                </form>
+            </div>
+            <!--/only ADMIN permission-->
+
+            <!--only ADMIN&SUBSCRIBER permission-->
+            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN
+                                    or showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).SUBSCRIBER}">
+                <form class="admin-button" action="#" th:action="@{/shelfaction}"  method="post">
+                    <input type="hidden" name="bookId" th:value="${book.id}"/>
+
+                    <div th:switch="${showuser.getShelf().getBookList().contains(book)}">
+                        <input th:case="${false}" type="submit" name="action"  value="Save to shelf"/>
+                        <input th:case="${true}" type="submit" name="action"  value="Delete from shelf"/>
+                    </div>
+                </form>
+                <a th:href="@{'book/'+${book.id}}">Read more</a>
+                <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>
+            </div>
+            <!--/only ADMIN&SUBSCRIBER permission-->
+        </div>
+    </div>
+    <!--/BOOK ITEM-->
+
+
+    </body>
+</html>

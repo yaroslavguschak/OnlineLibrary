@@ -10,9 +10,7 @@
 <body>
     <div th:replace="headernavigation :: header">Header</div>
     <div th:replace="headernavigation :: navigation">Menu</div>
-
     <!--MAIN-->
-
         <main>
             <div class="container">
                 <h2 class="collection-title">Search <small>
@@ -20,53 +18,16 @@
                 </small></h2>
 
                 <div th:if="${showuser.permission != T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
-                <div class="collections">
+                    <div class="collections">
 
 
-                    <div  th:each="book, iterationStatus : ${bookList}" class="collection-item-outer">
-                        <div class="collection-item">
-
-                                <img th:src="@{'img/'+${book.id}}"/>
-
-
-                            <div class="collection-text">
-                                <h3>Java core</h3>
-                                <p>Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI. Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI.
-                                </p>
-
-                                <!--only ADMIN permission-->
-                                <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
-                                    <form class="admin-button" action="#" th:action="@{/adminaction}"  method="post">
-                                        <input type="hidden" name="bookId" th:value="${book.id}"/>
-                                        <input type="submit" name="action"  value="Edit"/>
-                                        <input type="submit" name="action"  value="Delete"/>
-                                    </form>
-                                </div>
-                                <!--/only ADMIN permission-->
-
-                                <!--only ADMIN&SUBSCRIBER permission-->
-                                <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN
-                                or showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).SUBSCRIBER}">
-                                    <form class="admin-button" action="#" th:action="@{/shelfaction}"  method="post">
-                                        <input type="hidden" name="bookId" th:value="${book.id}"/>
-
-                                        <div th:switch="${showuser.getShelf().getBookList().contains(book)}">
-                                            <input th:case="${false}" type="submit" name="action"  value="Save to shelf"/>
-                                            <input th:case="${true}" type="submit" name="action"  value="Delete from shelf"/>
-                                        </div>
-                                    </form>
-                                    <a th:href="@{'book/'+${book.id}}">Read more</a>
-                                    <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>
-                                </div>
-                                <!--/only ADMIN&SUBSCRIBER permission-->
-
-
-                            </div>
+                        <div  th:each="book, iterationStatus : ${bookList}" class="collection-item-outer">
+                            <!--BOOK VIEW-->
+                                <div th:replace="bookviews :: bookitem">Book</div>
+                            <!--/BOOK VIEW-->
                         </div>
                     </div>
-
                 </div>
-            </div>
           </div>
      </main>
 

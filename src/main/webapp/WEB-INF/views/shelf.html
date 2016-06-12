@@ -8,63 +8,32 @@
 </head>
 
 <body>
-<div th:replace="headernavigation :: header">Header</div>
-<div th:replace="headernavigation :: navigation">Menu</div>
-<!--MAIN-->
-    <main>
-        <div class="container">
-            <h2 class="collection-title">Your books <small>Added from Lirary</small></h2>
-            <div th:if="${showuser} == null"><p>Please, login, and use personal shelf and other features!</p></div>
-            <div th:if="${showuser} != null">
-                <div class="collections">
-                    <div  th:each="book, iterationStatus : ${showuser.getShelf().getBookList()}" class="collection-item-outer">
-                        <div class="collection-item">
-
-                            <img th:src="@{'img/'+${book.id}}"/>
-
-
-                            <div class="collection-text">
-                                <h3>Java core</h3>
-                                <p>Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI. Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides a mechanism to transfer information between two entities logically associated with presentation elements in the GUI.
-                                </p>
-
-                                <!--only ADMIN permission-->
-                                <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
-                                    <form class="admin-button" action="#" th:action="@{/adminaction}"  method="post">
-                                        <input type="hidden" name="bookId" th:value="${book.id}"/>
-                                        <input type="submit" name="action"  value="Edit"/>
-                                        <input type="submit" name="action"  value="Delete"/>
-                                    </form>
-                                </div>
-                                <!--/only ADMIN permission-->
-
-                                <!--only ADMIN&SUBSCRIBER permission-->
-                                <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN
-                                    or showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).SUBSCRIBER}">
-                                    <form class="admin-button" action="#" th:action="@{/shelfaction}"  method="post">
-                                        <input type="hidden" name="bookId" th:value="${book.id}"/>
-                                        <input type="submit" name="action"  value="Delete from shelf"/>
-                                        <!--<input type="submit" name="action"  value="Delete from shelf"/>-->
-                                    </form>
-                                    <a th:href="@{'book/'+${book.id}}">Read more</a>
-                                    <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>
-                                </div>
-                                <!--/only ADMIN&SUBSCRIBER permission-->
-                            </div>
+    <div th:replace="headernavigation :: header">Header</div>
+    <div th:replace="headernavigation :: navigation">Menu</div>
+    <!--MAIN-->
+        <main>
+            <div class="container">
+                <h2 class="collection-title">Your books <small>Added from Lirary</small></h2>
+                <div th:if="${showuser} == null"><p>Please, login, and use personal shelf and other features!</p></div>
+                <div th:if="${showuser} != null">
+                    <div class="collections">
+                        <div  th:each="book, iterationStatus : ${showuser.getShelf().getBookList()}" class="collection-item-outer">
+                            <!--BOOK VIEW-->
+                                <div th:replace="bookviews :: bookitem">Book</div>
+                            <!--/BOOK VIEW-->
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-<!--MAIN-->
+        </main>
+    <!--MAIN-->
 
-<!--FOOTER-->
-<footer class="footer">
-    <div class="container">
-        <p>Yaroslav Guschak, 2015</p>
-    </div>
-</footer>
-<!--/FOOTER-->
+    <!--FOOTER-->
+    <footer class="footer">
+        <div class="container">
+            <p>Yaroslav Guschak, 2015</p>
+        </div>
+    </footer>
+    <!--/FOOTER-->
 </body>
 </html>
