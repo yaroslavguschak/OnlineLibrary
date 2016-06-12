@@ -48,13 +48,11 @@
             <!--SEARCH FORM-->
             <div th:if="${showuser.permission != T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
                 <form class="login" action="#" th:action="@{/search}" th:object="${searchRequest}" method="get">
-                    <select  name="genre" >
+                    <select  th:field="*{genre}" >
 
                         <option th:each="genreItem : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}"
                                 th:value="${genreItem}"
-                                th:text="${genreItem.displayGenre}"
-
-                                >
+                                th:text="${genreItem.displayGenre}">
                         </option>
                     </select>
                     <input type="text" th:field="*{searchTextInput}" required="required" autofocus="true"/>

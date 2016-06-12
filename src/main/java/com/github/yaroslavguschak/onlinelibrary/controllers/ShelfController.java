@@ -65,12 +65,9 @@ public class ShelfController {
 
     @RequestMapping(value = "/shelfaction" , method = RequestMethod.POST)
     public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, GeneralSecurityException {
-//        HttpSession httpSession = req.getSession(true);
-//        User user = (User)httpSession.getAttribute("user");
 
         if(user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin/Subs user. Do for security.
             user.copyAllFields(userDAO.getUserById(user.getId())); // check if another user with  ADMIN perm. del/edit some book(s) during the session
-//            httpSession.setAttribute("user", user); // put update user in session
             Long   bookId = Long.valueOf(req.getParameter("bookId"));
             String action = req.getParameter("action");
             Book book = bookDAO.getBookById(bookId);

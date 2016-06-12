@@ -8,11 +8,10 @@
     <div class="collection-item" th:fragment="bookitem">
         <img th:src="@{'img/'+${book.id}}"/>
 
-
         <div class="collection-text">
             <h3 th:text="${book.title}">Title</h3>
             <h3>
-                <small><span th:text="${book.author}"/>Author</small>
+                <small><span th:text="${book.author} + ' (' + ${book.genre.displayGenre} + ')'"/></small>
             </h3>
             <p th:text="${book.annotation}">Annotation</p>
 
@@ -37,13 +36,129 @@
                         <input th:case="${true}" type="submit" name="action"  value="Delete from shelf"/>
                     </div>
                 </form>
-                <a th:href="@{'book/'+${book.id}}">Read more</a>
+                <a th:href="@{${book.id}}">Read more</a>
                 <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>
             </div>
             <!--/only ADMIN&SUBSCRIBER permission-->
         </div>
     </div>
     <!--/BOOK ITEM-->
+
+
+    <!--BOOK DETAILED-->
+    <div class="collection-item" th:fragment="bookdetailed">
+        <img th:src="@{'img/'+${book.id}}"/>
+
+        <div class="collection-text">
+            <h3 th:text="${book.title}">Title</h3>
+            <h3>
+                <small>
+                    <span th:text="${book.author}"/>
+                    <div th:text="${book.isbn}">ISBN</div>
+                    <div th:text="${book.genre.displayGenre}">Genre</div>
+                    <div th:text="${book.year}+ ' year'">Year</div>
+                    <div th:text="${book.city}">City</div>
+                    <div th:text="${book.pages} + ' pages'" >Pages</div>
+                </small>
+            </h3>
+            <p th:text="${book.annotation}">Annotation</p>
+
+
+            <!--only ADMIN permission-->
+            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN}">
+                <form class="admin-button" action="#" th:action="@{/adminaction}"  method="post">
+                    <input type="hidden" name="bookId" th:value="${book.id}"/>
+                    <input type="submit" name="action"  value="Edit"/>
+                    <input type="submit" name="action"  value="Delete"/>
+                </form>
+            </div>
+            <!--/only ADMIN permission-->
+
+            <!--only ADMIN&SUBSCRIBER permission-->
+            <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).ADMIN
+                                    or showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).SUBSCRIBER}">
+                <form class="admin-button" action="#" th:action="@{/shelfaction}"  method="post">
+                    <input type="hidden" name="bookId" th:value="${book.id}"/>
+
+                    <div th:switch="${showuser.getShelf().getBookList().contains(book)}">
+                        <input th:case="${false}" type="submit" name="action"  value="Save to shelf"/>
+                        <input th:case="${true}" type="submit" name="action"  value="Delete from shelf"/>
+                    </div>
+                </form>
+                <a th:href="@{'download/'+${book.id} + '.pdf'}">Download PDF</a>
+            </div>
+            <!--/only ADMIN&SUBSCRIBER permission-->
+        </div>
+    </div>
+    <!--/BOOK DETAILED-->
+
+    <!--BOOK EDITING / ADDITION-->
+    <div class="collection-item" th:fragment="bookedit">
+        <img th:src="@{'img/'+${bookRequest.id}}"/>
+
+        <div class="collection-text">
+            <h3 th:text="${bookRequest.title}">Title</h3>
+            <h3>
+                <small>
+                    <span th:text="${bookRequest.author}"/>
+                    <div th:text="${bookRequest.isbn}">ISBN</div>
+                    <div th:text="${bookRequest.genre.displayGenre}">Genre</div>
+                    <div th:text="${bookRequest.year}+ ' year'">Year</div>
+                    <div th:text="${bookRequest.city}">City</div>
+                    <div th:text="${bookRequest.pages} + ' pages'" >Pages</div>
+                </small>
+            </h3>
+            <p th:text="${bookRequest.annotation}">Annotation</p>
+
+            <form action="#" th:action="@{/doeditbook}"  th:object="${bookRequest}" method="post"
+                  enctype="multipart/form-data">
+                <input type="hidden" th:field="*{id}"/>
+
+                <label for="author">Auhor:</label>
+                <input type="text" th:field="*{author}"/>
+
+                <label for="title">Title:</label>
+                <input type="text" th:field="*{title}"/>
+
+                <label for="annotation">Annotation:</label>
+                <input type="text" th:field="*{annotation}"/>
+
+                <label for="genre">Genre:</label>
+                <select  th:field="*{genre}" >
+                    <option th:each="genreItem : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}"
+                            th:value="${genreItem}"
+                            th:text="${genreItem.displayGenre}">
+                    </option>
+                </select>
+
+                <label for="year">Year:</label>
+                <input type="text" th:field="*{year}"/>
+
+                <label for="city">City:</label>
+                <input type="text" th:field="*{city}"/>
+
+                <label for="pages">Pages:</label>
+                <input type="text" th:field="*{pages}"/>
+
+                <label for="booktext">Full text:</label>
+                <input type="text" th:field="*{booktext}"/>
+
+                <label for="cover"> Choose img for book's cover:</label>
+                <!--<input type="file" th:field="*{img}"  class="input" />-->
+                <input type="file" name="cover"  class="input" />
+
+                <input type="submit" value="Save edited book"/>
+            </form>
+
+
+
+
+
+        </div>
+    </div>
+    <!--/BOOK EDITING / ADDITION-->
+
+
 
 
     </body>

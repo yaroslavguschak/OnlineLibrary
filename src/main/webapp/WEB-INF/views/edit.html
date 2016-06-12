@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Java Lib</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../../../resources/css/style.css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" href="../../../resources/css/normalize.css" th:href="@{/resources/css/normalize.css}" />
+</head>
+
+<body>
+    <div th:replace="headernavigation :: header">Header</div>
+    <div th:replace="headernavigation :: navigation">Menu</div>
+    <!--MAIN-->
+        <main>
+            <div class="container">
+                <h2 class="collection-title">Edit book. <small>Fill inputs bellow </small></h2>
+                <div th:if="${showuser.permission != T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
+                <div class="collections">
+                    <!--<div  th:each="book, iterationStatus : ${bookList}" class="collection-item-outer">-->
+                        <!--BOOK VIEW-->
+                            <div th:replace="bookviews :: bookedit">Book</div>
+                        <!--/BOOK VIEW-->
+                    <!--</div>-->
+
+                </div>
+            </div>
+          </div>
+     </main>
+
+
+
+    <!--MAIN-->
+
+    <!--FOOTER-->
+    <footer class="footer">
+        <div class="container">
+            <p>Yaroslav Guschak, 2015</p>
+        </div>
+    </footer>
+    <!--/FOOTER-->
+</body>
+</html>

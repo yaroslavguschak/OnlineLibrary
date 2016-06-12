@@ -6,6 +6,7 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
 import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.SearchRequest;
 import com.github.yaroslavguschak.onlinelibrary.util.Alert;
 import com.github.yaroslavguschak.onlinelibrary.util.UriReferrerCutter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,35 +42,15 @@ public class AdminController {
     @Autowired
     DateFormat dateFormat;
 
-//    @RequestMapping(value = "/admin")
-//    public ModelAndView showNews(HttpServletRequest req) {
-//        final ModelAndView mav = new ModelAndView("/admin");
-//        HttpSession httpSession = req.getSession(true);
-//        User user = (User)httpSession.getAttribute("user");
-//
-//        if (user != null && user.getPermission().equals(Permission.ADMIN)){
-//            List<Book> allBooksInLibrary = bookDAO.getAllBooks();
-//            mav.addObject("showuser", user);
-//            mav.addObject("bookList", allBooksInLibrary);
-//            return mav;
-//        } else  {
-//            mav.addObject("showuser", user);
-//            return mav;
-//        }
-//    }
 
 
     @RequestMapping(value = "/adminaction" , method= RequestMethod.POST)
     public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, GeneralSecurityException {
-//        HttpSession httpSession = req.getSession(true);
-//        User user = (User)httpSession.getAttribute("user");
 
         String referrerURI = req.getHeader("referer");
         referrerURI = UriReferrerCutter.cutReferre(referrerURI);
 
         if( user.getPermission() == Permission.ADMIN) { // of course, view doesn't generate form for non-Admin user. Do for security.
-//            user = userDAO.getUserById(user.getId()); // check if another user with  ADMIN perm. del/edit some book(s)
-//            httpSession.setAttribute("user", user); // put update user in session
             Long   bookId = Long.valueOf(req.getParameter("bookId"));
             String action = req.getParameter("action");
             Book book = bookDAO.getBookById(bookId);
@@ -77,7 +58,9 @@ public class AdminController {
             if ("Edit".equals(action)) {
                 System.out.print("LOG: " + "user " + user.getLogin()+ " sent book # " + bookId + " " + book.getTitle() +  " for editing");
                 BookRequest bookRequest = new BookRequest(book);
-                final ModelAndView mav = new ModelAndView("/editbook");
+                final ModelAndView mav = new ModelAndView("edit");
+                mav.addObject("searchRequest", new SearchRequest());
+                mav.addObject("showuser", user);
                 mav.addObject("bookRequest", bookRequest);
                 return mav;
             }

@@ -2,7 +2,12 @@ package com.github.yaroslavguschak.onlinelibrary.controllers;
 
 import com.github.yaroslavguschak.onlinelibrary.entity.Book;
 import com.github.yaroslavguschak.onlinelibrary.dao.BookDAO;
+import com.github.yaroslavguschak.onlinelibrary.entity.Permission;
+import com.github.yaroslavguschak.onlinelibrary.entity.User;
 import com.github.yaroslavguschak.onlinelibrary.entityrequest.BookRequest;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.LoginRequest;
+import com.github.yaroslavguschak.onlinelibrary.entityrequest.SearchRequest;
+import com.github.yaroslavguschak.onlinelibrary.util.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.io.ByteStreams;
 
 
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.DateFormat;
 
 /** create, edit books*/
 @Controller
@@ -33,6 +40,15 @@ public class BookController {
 
     @Autowired
     ServletContext context;
+
+    @Inject
+    User user;
+
+    @Inject
+    Alert alert;
+
+    @Autowired
+    DateFormat dateFormat;
 
     /* Get book title img */
     @RequestMapping(value = "/img/{bookId}")
@@ -91,28 +107,30 @@ public class BookController {
     public ModelAndView editActionBook(@ModelAttribute("bookRequest") BookRequest bookReq, HttpServletRequest req,
                                        HttpServletResponse resp,  @RequestParam("cover") MultipartFile cover)
             throws ServletException, IOException {
-            bookReq.setImg(cover.getBytes());
-
         Book book = bookDAO.getBookById(bookReq.getId());
-
+        if (cover.isEmpty()){
+            bookReq.setImg(book.getImg());
+        } else {
+            bookReq.setImg(cover.getBytes());
+        }
         book.updateFromRequest(bookReq);
         bookDAO.updateBook(book);
-
-        return new ModelAndView("redirect:/admin");
+        return new ModelAndView("redirect:/index");
 
     }
 
-    @RequestMapping(value = "/book/{bookId}", method = RequestMethod.GET)
-    public @ResponseBody Book getBookInXML(@PathVariable String bookId) {
+    @RequestMapping(value = "/{bookId}", method = RequestMethod.GET)
+    public ModelAndView viewDetailedBook(@PathVariable String bookId) {
+        final ModelAndView mav = new ModelAndView("book");
+        mav.addObject("showuser", user);
 
-        Book book = bookDAO.getBookById(Long.parseLong(bookId));
-
-        return book;
+        if (user.getPermission() != Permission.GUEST) {
+            Book book = bookDAO.getBookById(Long.parseLong(bookId));
+            mav.addObject("book", book);
+            mav.addObject("searchRequest", new SearchRequest());
+        } else {
+            mav.addObject("loginRequest", new LoginRequest());
+        }
+        return mav;
     }
-
-
-
-
-
-
 }
