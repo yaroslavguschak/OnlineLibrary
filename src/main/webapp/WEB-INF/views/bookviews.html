@@ -93,25 +93,33 @@
     <!--/BOOK DETAILED-->
 
     <!--BOOK EDITING / ADDITION-->
-    <div class="collection-item" th:fragment="bookedit">
-        <img th:src="@{'img/'+${bookRequest.id}}"/>
+    <div class="edit"  th:fragment="bookedit">
+        <div class="edit-img">
+            <img th:src="@{'img/'+${bookRequest.id}}"/>
+        </div>
 
-        <div class="collection-text">
+        <div class="edit-fields">
             <h3 th:text="${bookRequest.title}">Title</h3>
 
-            <form action="#" th:action="@{/doeditbook}"  th:object="${bookRequest}" method="post"
+            <form  action="#" th:action="@{/doeditbook}"  th:object="${bookRequest}" method="post"
                   enctype="multipart/form-data">
                 <input type="hidden" th:field="*{id}"/>
 
-                <label for="author">Auhor:</label>
-                <input type="text" th:field="*{author}"/>
+                <div class="field">
+                    <label for="author">Auhor:</label>
+                    <input type="text" th:field="*{author}"/>
+                 </div>
 
-                <label for="title">Title:</label>
-                <input type="text" th:field="*{title}"/>
+                <div class="field">
+                    <label for="title">Title:</label>
+                    <input type="text" th:field="*{title}"/>
+                    </div>
+                <div class="field">
+                    <label for="annotation">Annotation:</label>
+                    <input type="text" th:field="*{annotation}"/>
+                </div>
 
-                <label for="annotation">Annotation:</label>
-                <input type="text" th:field="*{annotation}"/>
-
+                <div class="field">
                 <label for="genre">Genre:</label>
                 <select  th:field="*{genre}" >
                     <option th:each="genreItem : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}"
@@ -119,23 +127,27 @@
                             th:text="${genreItem.displayGenre}">
                     </option>
                 </select>
-
-                <label for="year">Year:</label>
-                <input type="text" th:field="*{year}"/>
-
-                <label for="city">City:</label>
-                <input type="text" th:field="*{city}"/>
-
-                <label for="pages">Pages:</label>
-                <input type="text" th:field="*{pages}"/>
-
-                <label for="booktext">Full text:</label>
-                <input type="text" th:field="*{booktext}"/>
-
-                <label for="cover"> Choose img for book's cover:</label>
-                <!--<input type="file" th:field="*{img}"  class="input" />-->
-                <input type="file" name="cover"  class="input" />
-
+                </div>
+                <div class="field">
+                    <label for="year">Year:</label>
+                    <input type="text" th:field="*{year}"/>
+                </div>
+                    <div class="field">
+                    <label for="city">City:</label>
+                    <input type="text" th:field="*{city}"/>
+                </div>
+                <div class="field">
+                    <label for="pages">Pages:</label>
+                    <input type="text" th:field="*{pages}"/>
+                </div>
+                <div class="field">
+                    <label for="cover">Cover img:</label>
+                    <input type="file" name="cover" />
+                </div>
+                <div class="field">
+                    <label for="booktext">Full text:</label>
+                    <input type="text" th:field="*{booktext}"/>
+                </div>
                 <input type="submit" value="Save edited book"/>
             </form>
 

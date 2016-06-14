@@ -5,7 +5,7 @@ import com.github.yaroslavguschak.onlinelibrary.entity.Genre;
 public class SearchRequest {
 
 
-    private String searchTextInput = "Author or title";
+    private String searchTextInput = "";
 
     private Genre   genre    = Genre.NONE;
 

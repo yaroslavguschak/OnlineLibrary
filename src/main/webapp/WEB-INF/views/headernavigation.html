@@ -38,7 +38,7 @@
             <!--LOGIN FORM-->
             <div th:if="${showuser.permission == T(com.github.yaroslavguschak.onlinelibrary.entity.Permission).GUEST}">
                 <form class="login" action="#" th:action="@{/loginchek}"  th:object="${loginRequest}" method="post">
-                    <input type="text" th:field="*{login}" required="required" autofocus="true"/>
+                    <input type="text" placeholder="login" th:field="*{login}" required="required" autofocus="true"/>
                     <input type="password" placeholder="password" th:field="*{password}" required="required"/>
                     <input type="submit" value="Login"/>
                 </form>
@@ -55,13 +55,11 @@
                                 th:text="${genreItem.displayGenre}">
                         </option>
                     </select>
-                    <input type="text" th:field="*{searchTextInput}" required="required" autofocus="true"/>
+                    <input type="text" placeholder="Author or title" th:field="*{searchTextInput}" required="required" autofocus="true"/>
                     <input type="submit" value="Search"/>
                 </form>
             </div>
             <!--SEARCH FORM-->
-
-            <!--/LOGIN FORM-->
         </div>
     </nav>
     <!--/NAVIGATION-->
