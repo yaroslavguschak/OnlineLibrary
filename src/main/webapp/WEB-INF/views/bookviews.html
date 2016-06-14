@@ -98,17 +98,6 @@
 
         <div class="collection-text">
             <h3 th:text="${bookRequest.title}">Title</h3>
-            <h3>
-                <small>
-                    <span th:text="${bookRequest.author}"/>
-                    <div th:text="${bookRequest.isbn}">ISBN</div>
-                    <div th:text="${bookRequest.genre.displayGenre}">Genre</div>
-                    <div th:text="${bookRequest.year}+ ' year'">Year</div>
-                    <div th:text="${bookRequest.city}">City</div>
-                    <div th:text="${bookRequest.pages} + ' pages'" >Pages</div>
-                </small>
-            </h3>
-            <p th:text="${bookRequest.annotation}">Annotation</p>
 
             <form action="#" th:action="@{/doeditbook}"  th:object="${bookRequest}" method="post"
                   enctype="multipart/form-data">
