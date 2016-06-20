@@ -50,8 +50,10 @@ public class PDFconverter {
             float startY = mediabox.getUpperRightY() - margin;
 
             String text = book.getBooktext();
-            text = text.replace('\n',' ');
+            text = text.replace("" + (char)13, "");
+            text = text.replace('\n','_');
             text = text.replace('\t',' ');
+
             List<String> lines = new ArrayList<String>();
             int lastSpace = -1;
             while (text.length() > 0)
@@ -96,8 +98,7 @@ public class PDFconverter {
             contentStream.newLineAtOffset(0, -leading);
             ++lineCount;
 
-            contentStream.showText(book.getGenre().toString().substring(0,1) +
-                    book.getGenre().toString().toLowerCase().replace('_', ' ').substring(1,book.getGenre().toString().length()));
+            contentStream.showText(book.getGenre().getDisplayGenre());
             contentStream.newLineAtOffset(0, -leading);
             ++lineCount;
 

@@ -40,7 +40,7 @@ public class AdminController {
     DateFormat dateFormat;
 
     @RequestMapping(value = "/adminaction" , method= RequestMethod.POST)
-    public ModelAndView adminAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, GeneralSecurityException {
+    public ModelAndView adminAction( HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, GeneralSecurityException {
 
         String referrerURI = req.getHeader("referer");
         referrerURI = UriReferrerCutter.cutReferre(referrerURI);

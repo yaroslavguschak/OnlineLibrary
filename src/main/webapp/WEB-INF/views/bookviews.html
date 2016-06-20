@@ -114,14 +114,10 @@
                     <label for="title">Title:</label>
                     <input type="text" th:field="*{title}"/>
                     </div>
-                <div class="field">
-                    <label for="annotation">Annotation:</label>
-                    <input type="text" th:field="*{annotation}"/>
-                </div>
 
                 <div class="field">
-                <label for="genre">Genre:</label>
-                <select  th:field="*{genre}" >
+                    <label for="genre">Genre:</label>
+                    <select  th:field="*{genre}" >
                     <option th:each="genreItem : ${T(com.github.yaroslavguschak.onlinelibrary.entity.Genre).values()}"
                             th:value="${genreItem}"
                             th:text="${genreItem.displayGenre}">
@@ -132,7 +128,7 @@
                     <label for="year">Year:</label>
                     <input type="text" th:field="*{year}"/>
                 </div>
-                    <div class="field">
+                <div class="field">
                     <label for="city">City:</label>
                     <input type="text" th:field="*{city}"/>
                 </div>
@@ -145,8 +141,12 @@
                     <input type="file" name="cover" />
                 </div>
                 <div class="field">
+                    <label for="annotation">Annotation:</label>
+                    <textarea type="text" th:field="*{annotation}"/>
+                </div>
+                <div class="field">
                     <label for="booktext">Full text:</label>
-                    <input type="text" th:field="*{booktext}"/>
+                    <textarea type="text" th:field="*{booktext}"/>
                 </div>
                 <input type="submit" value="Save edited book"/>
             </form>
