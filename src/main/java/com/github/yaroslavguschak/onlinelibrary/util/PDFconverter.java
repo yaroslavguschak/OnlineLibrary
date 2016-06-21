@@ -53,31 +53,44 @@ public class PDFconverter {
             text = text.replace("" + (char)13, "");
             text = text.replace('\n','_');
             text = text.replace('\t',' ');
+            String space = "      ";
+            text = space + text;
 
             List<String> lines = new ArrayList<String>();
             int lastSpace = -1;
             while (text.length() > 0)
             {
-                int spaceIndex = text.indexOf(' ', lastSpace + 1);
-                if (spaceIndex < 0){
-                    spaceIndex = text.length();}
+                int spaceIndex = text.indexOf(' ', lastSpace + 1); // шукаємо перший пробіл
+                int nextNEL = text.indexOf('_', 0);
 
-                String subString = text.substring(0, spaceIndex);
-                float size = fontSize * pdfFont.getStringWidth(subString) / 1000;
-                if (size > width)
-                {
-                    if (lastSpace < 0)
-                        lastSpace = spaceIndex;
-                    subString = text.substring(0, lastSpace);
+                if (spaceIndex < 0){
+                    spaceIndex = text.length();} // якщо пробілу не має, номером знаку пробілу буде останні симол одного слова
+
+                String subString = text.substring(0, spaceIndex); // вирізаємо підстрічку до першого (поки) пробілу
+                float size = fontSize * pdfFont.getStringWidth(subString) / 1000; // обраховуємо довжину підстрічки
+
+                if ((subString.length() > nextNEL) && (nextNEL > 0 )){
+                    System.out.println("NEED NEL***************--------------");
+                    subString = text.substring(0, nextNEL); // беремо довжину до переводу стрічки.
                     lines.add(subString);
-                    text = text.substring(lastSpace).trim();
+                    text = space + text.substring(nextNEL + 1).trim();
                     lastSpace = -1;
-                }
-                else if (spaceIndex == text.length()){
-                    lines.add(text);
-                    text = "";}
-                    else { lastSpace = spaceIndex;
+                } else {
+                    if (size > width) {
+                        if (lastSpace < 0) {
+                            lastSpace = spaceIndex;}
+
+                        subString = text.substring(0, lastSpace); // беремо довжину на слово меншу.
+                        lines.add(subString);
+                        text = text.substring(lastSpace).trim(); //обрізаємо весь текст
+                        lastSpace = -1;
                     }
+                    else if (spaceIndex == text.length()){
+                        lines.add(text);
+                        text = "";}
+                        else { lastSpace = spaceIndex;
+                        }
+                }
             }
 
             int maxLine = (int) (height / leading);
